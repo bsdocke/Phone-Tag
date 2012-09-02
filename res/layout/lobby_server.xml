@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/lobby" >
+    
+    <TextView
+        android:id="@+id/deviceListTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/serverLobbyHeaderText"
+        android:textColor="#5CADFF"
+        android:textSize="@dimen/inputLabelSize" />
+    
+    <TextView
+        android:id="@+id/gameTimeLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/deviceListTitle"
+        android:gravity="center_horizontal"
+        android:textSize="24sp" />
+    
+    <ListView
+        android:id="@+id/deviceList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gameTimeLabel"
+        android:keepScreenOn="true" />
+
+</RelativeLayout>

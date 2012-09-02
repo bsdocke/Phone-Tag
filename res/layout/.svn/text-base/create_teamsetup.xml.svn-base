@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:name="@+id/teamSetupHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:textColor="@color/headerTextColor"
+        android:textSize="@dimen/inputLabelSize" />
+
+    <TextView
+        android:name="@+id/teamColorInstruction"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/teamSetupHeader"
+        android:text="@string/selectColorText"
+        android:textSize="@dimen/directionBodySize" />
+
+    <Button
+        android:id="@+id/blueBttn"
+        android:layout_width="@dimen/optionButtonWidth"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/teamColorInstruction"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/custom_option_button"
+        android:onClick="onClick"
+        android:text="@string/blueBttnText"
+        android:textColor="@color/customButtonTextColor"
+        android:textSize="@dimen/optionButtonTextSize" />
+
+    <Button
+        android:id="@+id/redBttn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/teamColorInstruction"
+        android:layout_marginBottom="20dp"
+        android:layout_toRightOf="@id/blueBttn"
+        android:background="@drawable/custom_option_button"
+        android:onClick="onClick"
+        android:text="@string/redBttnText"
+        android:textColor="@color/customButtonTextColor"
+        android:textSize="@dimen/optionButtonTextSize" />
+
+    <Button
+        android:id="@+id/yellowBttn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/teamColorInstruction"
+        android:layout_marginBottom="20dp"
+        android:layout_toRightOf="@id/redBttn"
+        android:background="@drawable/custom_option_button"
+        android:onClick="onClick"
+        android:text="@string/yellowBttnText"
+        android:textColor="@color/customButtonTextColor"
+        android:textSize="@dimen/optionButtonTextSize" />
+
+    <Button
+        android:id="@+id/whiteBttn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/teamColorInstruction"
+        android:layout_marginBottom="20dp"
+        android:layout_toRightOf="@id/yellowBttn"
+        android:background="@drawable/custom_option_button"
+        android:onClick="onClick"
+        android:text="@string/whiteBttnText"
+        android:textColor="@color/customButtonTextColor"
+        android:textSize="@dimen/optionButtonTextSize" />
+
+</RelativeLayout>

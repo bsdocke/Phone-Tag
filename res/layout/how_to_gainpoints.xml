@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+    <TextView
+            android:id="@+id/directionHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:text="@string/howToGainPointsTitleText"
+            android:textColor="#5CADFF"
+            android:textSize="@dimen/inputLabelSize" />
+
+        <TextView
+            android:id="@+id/directionBody"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/directionHeader"
+            android:layout_marginTop="23dp"
+            android:gravity="center_horizontal"
+            android:text="@string/howToGainPointsBodyText"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/directionBodySize" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/directionBody"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/coin" />
+
+</RelativeLayout>

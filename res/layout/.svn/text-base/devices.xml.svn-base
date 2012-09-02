@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/deviceListTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/devicesListTitleText"
+        android:textSize="@dimen/directionBodySize" />
+
+    <TextView
+        android:id="@+id/scoreLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/scoreText"
+        android:layout_below="@id/deviceListTitle" />
+
+    <ListView
+        android:id="@+id/deviceList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/deviceListTitle" />
+
+</RelativeLayout>

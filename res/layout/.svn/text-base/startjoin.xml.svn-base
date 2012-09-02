@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/joinStartLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/joinStartLabelText"
+        android:textColor="@color/headerTextColor"
+        android:textSize="@dimen/inputLabelSize" />
+
+    <Button
+        android:id="@+id/joinGameBttn"
+        android:layout_width="@dimen/optionButtonWidth"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/joinStartLabel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/custom_option_button"
+        android:onClick="gotoChooseColorActivity"
+        android:text="@string/joinGameBttnText"
+        android:textColor="@color/customButtonTextColor"
+        android:textSize="@dimen/optionButtonTextSize" />
+
+    <Button
+        android:name="@+id/startGameBttn"
+        android:layout_width="@dimen/optionButtonWidth"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/joinGameBttn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/custom_option_button"
+        android:text="@string/startGameBttnText"
+        android:textColor="@color/customButtonTextColor"
+        android:textSize="@dimen/optionButtonTextSize" />
+
+</RelativeLayout>

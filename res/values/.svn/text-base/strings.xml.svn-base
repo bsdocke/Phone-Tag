@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="inputID">Please enter your ID Number</string>
+    <string name="app_name">Tele-Tag</string>
+    <string name="inputHint">ID Number</string>
+    <string name="okText">OK</string>
+    <string name="cancelText">Cancel</string>
+    <string name="modeSelectText">Select a team to play on:</string>
+    <string name="redBttnText">Red</string>
+    <string name="blueBttnText">Blue</string>
+    <string name="yellowBttnText">Yellow</string>
+    <string name="whiteBttnText">White</string>
+    <string name="directionTitleText">Directions</string>
+    <string name="directionBodyText">The phone will choose someone to be "it". If you\'re "it", run after someone in your group to tag them. Be careful! If you get too far away from your group or stay still too long, you\'ll become "it"! Do not throw the phone!</string>
+	<string name="devicesListTitleText">Signal Strength</string>
+	<string name="joinStartLabelText">Join or Start a Game</string>
+	<string name="joinGameBttnText">Join Game</string>
+	<string name="startGameBttnText">Start Game</string>
+	<string name="scoreText">500</string>
+	<string name="setupTeamHeaderText">Configure Team Settings</string>
+	<string name="selectColorText">Select team color:</string>
+	<string name="selectMemberLimit">Select max number of team members:</string>
+</resources>

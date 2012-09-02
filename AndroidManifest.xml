@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.activity"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="6" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+
+    <application
+        android:icon="@drawable/run_tag"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".InputIDActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="nosensor" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SetJoinNameActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".DirectionsScreenActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".DevicesTrackerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".StartJoinActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".CreateChoosePlayerNameActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".GameNameSetupActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".GameActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".StartGameDirectionsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".LobbyServerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".UserGameSelectActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".FinalScoreActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".HowToPlayActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".HowToSetUpActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".HowToGameActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".HowToGainPointsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+    </application>
+
+</manifest>
