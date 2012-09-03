@@ -1,0 +1,10 @@
+Tag
+
+It order should be "randomized". Create a list of potential "It" orders.
+	- Number of players may change
+	- From there randomly select an It order
+	- Split hour into 5 minute intervals
+        - Remove the handicap for the first player that we put in to adjust for that Bluetooth delay error
+	- disable all buttons during the game
+	- Compute scores based on what you leeched from other people. Go through each player at the end and have them do the scan/discover stuff one by one.
+	- Change the name, artwork
