@@ -8,3 +8,4 @@ It order should be "randomized". Create a list of potential "It" orders.
 	- disable all buttons during the game
 	- Compute scores based on what you leeched from other people. Go through each player at the end and have them do the scan/discover stuff one by one.
 	- Change the name, artwork
+	-Hi
