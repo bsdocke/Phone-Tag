@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.android.data.GlobalState;
 import com.android.data.Player;
 
 public class FinalScoreActivity extends BluetoothActivity {
@@ -23,7 +24,6 @@ public class FinalScoreActivity extends BluetoothActivity {
 	ArrayAdapter<ScoreObject> scoreAdapter;
 
 	ArrayList<String> playerNames;
-	ArrayList<Player> playerList;
 
 	Timer discoverTimer;
 	Timer cancelTimer;
@@ -50,7 +50,6 @@ public class FinalScoreActivity extends BluetoothActivity {
 		initializeArrayList();
 		initializeArrayAdapter();
 		addMyScore();
-		getPlayers();
 
 		initializeTimers();
 		collectScores();
@@ -65,10 +64,6 @@ public class FinalScoreActivity extends BluetoothActivity {
 				R.layout.device_entry);
 		ListView list = (ListView) findViewById(R.id.scoreList);
 		list.setAdapter(scoreAdapter);
-	}
-
-	private void getPlayers() {
-		playerList = getIntent().getParcelableArrayListExtra("PLAYERS");
 	}
 
 	private void initializeTimers() {
@@ -105,13 +100,6 @@ public class FinalScoreActivity extends BluetoothActivity {
 		listenForScores();
 	}
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode <= 0) {
-			gotoJoinStartActivity();
-		}
-	}
-
 	public void onStop() {
 		// unregisterReceiver(discoverReceiver);
 		cancelTimers();
@@ -120,14 +108,22 @@ public class FinalScoreActivity extends BluetoothActivity {
 	}
 
 	private void cancelTimers() {
-		if (discoverTimer != null)
+		if (timerItemDefined(discoverTimer))
 			discoverTimer.cancel();
-		if (scoreTask != null)
+		if (timerItemDefined(scoreTask))
 			scoreTask.cancel();
-		if (cancelTimer != null)
+		if (timerItemDefined(cancelTimer))
 			cancelTimer.cancel();
-		if (cancelTask != null)
+		if (timerItemDefined(cancelTask))
 			cancelTask.cancel();
+	}
+
+	private boolean timerItemDefined(Timer time) {
+		return time != null;
+	}
+
+	private boolean timerItemDefined(TimerTask time) {
+		return time != null;
 	}
 
 	private void listenForScores() {
@@ -135,15 +131,15 @@ public class FinalScoreActivity extends BluetoothActivity {
 	}
 
 	public void onBackPressed() {
-		gotoJoinStartActivity();
+		gotoSplashActivity();
 	}
 
-	private void gotoJoinStartActivity() {
+	private void gotoSplashActivity() {
 		cancelTimers();
 		unregisterReceiver(discoverReceiver);
 		scoreAdapter.clear();
 		adapter.cancelDiscovery();
-		Intent restart = new Intent(this, StartJoinActivity.class);
+		Intent restart = new Intent(this, SplashActivity.class);
 		startActivity(restart);
 	}
 
@@ -154,27 +150,25 @@ public class FinalScoreActivity extends BluetoothActivity {
 
 				if (isActionFound(action)) {
 					BluetoothDevice device = getRemoteDevice(intent);
-					if (isPhone(device) && !hasBeenFound(device.getAddress())) {
+					if (isPhone(device) && !hasBeenFound(device.getName())) {
 						String name = device.getName();
 						String[] nameTokens = name.split("__");
-						if (nameTokens.length == 2) {
+						if (nameTokens.length > 2) {
 							boolean isPlayer = false;
-							for (Player play : playerList) {
-								if (device.getAddress().equals(
-										play.getAddress())) {
+							for (String play : GlobalState.itOrder) {
+								if (nameTokens[0].equals(play)) {
 									isPlayer = true;
 								}
 							}
 
 							if (isPlayer) {
-								playerNames.add(device.getAddress());
+								playerNames.add(nameTokens[0]);
 								ScoreObject scoreItem = new ScoreObject(
 										nameTokens[0].split("_\\$_")[0],
 										Integer.parseInt(nameTokens[1]));
 								scoreAdapter.add(scoreItem);
 								orderScores();
-								if (scoreAdapter.getCount() == playerList
-										.size()) {
+								if (scoreAdapter.getCount() == GlobalState.itOrder.length) {
 									adapter.cancelDiscovery();
 									cancelTimers();
 								}
@@ -194,9 +188,9 @@ public class FinalScoreActivity extends BluetoothActivity {
 		});
 	}
 
-	private boolean hasBeenFound(String address) {
+	private boolean hasBeenFound(String name) {
 		for (String player : playerNames) {
-			if (player.equals(address)) {
+			if (player.equals(name)) {
 				return true;
 			}
 		}

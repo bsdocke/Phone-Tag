@@ -1,11 +1,7 @@
 package com.android.activity;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,60 +10,48 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
 
 import com.android.data.GlobalState;
-import com.android.data.Player;
 
-public class DevicesTrackerActivity extends BluetoothActivity implements
-		SensorEventListener {
+public class DevicesTrackerActivity extends BluetoothActivity {
 
 	private Intent loadScore;
-	
+
 	private Timer cancelScheduler;
 	private Timer startScheduler;
 	private Timer itScheduler;
-	
+	private Timer endScheduler;
+
 	private StartDiscoveryTask startTask;
 	private ChangeItTask itTask;
-	
+	private EndTask endTask;
+
 	private TextView scoreBoard;
 	private int score;
-	private ArrayList<AccelerometerData> accelerationSamples;
-	private ArrayList<Player> playerList;
-	private Player it;
+	private String[] playerList;
+	private String it;
 	private int index = 0;
 	private int foundCount = 0;
-	
+
 	private SoundPool pool;
 	private int soundID;
-	
-	private SensorManager sManager;
-	private Sensor accelerometer;
-	
-	private String startTime;
 
 	private static final int START_SCORE = 0;
-	private static final int SCORE_OFFSET = 110;
-	private static final int GAME_DURATION = 120;
-	private static final int SCORE_HANDICAPP = 200;
+	private static final int SCORE_OFFSET = 100;
+	private static final int GAME_DURATION = 360;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.devices);
-		accelerationSamples = new ArrayList<AccelerometerData>();
 		getWindow().addFlags(LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
@@ -80,31 +64,27 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 		initSound();
 		setPlayerListFromExtra();
 		setFinalScoreIntent();
+		GlobalState.scoreMap = new HashMap<String, Integer>();
 
 		setAdapter();
 		initTimerItems();
 		initScoreItems(START_SCORE);
 
-		makeDiscoverable(GAME_DURATION);
-	}
-	
-	private void startUp(){
-		Date newTime = new Date();
+		discoverableAccepted();
 	}
 
 	private void setPlayerListFromExtra() {
-		Bundle extras = getIntent().getExtras();
-		playerList = extras.getParcelableArrayList("IT_ORDER");
-
+		int itOrderIndex = Calendar.MINUTE / 12;
+		playerList = GlobalState.itLists.get(itOrderIndex);
+		GlobalState.itOrder = playerList;
 	}
-	
 
 	private void setFinalScoreIntent() {
 		loadScore = new Intent(this, FinalScoreActivity.class);
 	}
 
 	private void setItOrder() {
-		int length = playerList.size();
+		int length = playerList.length;
 		int interval = (GAME_DURATION / length) * 1000;
 
 		updateIt();
@@ -114,7 +94,8 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 	}
 
 	private void updateIt() {
-		it = playerList.get(index);
+		if (index < playerList.length)
+			it = playerList[index];
 	}
 
 	private void setItScheduling(int interval) {
@@ -127,13 +108,6 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode > 0) {
 			discoverableAccepted();
-			sManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-			accelerometer = sManager
-					.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-			sManager.registerListener(this, accelerometer,
-					SensorManager.SENSOR_DELAY_NORMAL);
-			startTime = Calendar.HOUR_OF_DAY + "_" + Calendar.MINUTE + "_"
-					+ Calendar.SECOND;
 		} else
 			discoverableRejected();
 	}
@@ -156,14 +130,18 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 	}
 
 	private String parseNameFromIt() {
-		String name = it.getName();
-		String[] tokens = name.split("_\\$_");
+
+		String[] tokens = it.split("_\\$_");
 		return tokens[0];
 	}
 
 	private void initTimerItems() {
 		startScheduler = new Timer();
 		startTask = new StartDiscoveryTask();
+		endScheduler = new Timer();
+		endTask = new EndTask();
+
+		endScheduler.schedule(endTask, GAME_DURATION * 1000);
 	}
 
 	private void initScoreItems(int startScore) {
@@ -182,13 +160,7 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 	}
 
 	private void initScore(int startScore) {
-		String starterAddress = playerList.get(0).getAddress();
-		boolean isFirst = starterAddress.equals(adapter.getAddress());
-		if (isFirst) {
-			score = SCORE_HANDICAPP;
-		} else {
-			score = startScore;
-		}
+		score = startScore;
 	}
 
 	private void setScoreText(String newScore) {
@@ -197,6 +169,14 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 
 	protected void setUpBluetoothDetection() {
 		super.setupBluetoothDetection();
+		// Process p;
+		try {
+			Log.e("TIME EXTENDED", "1 minute");
+			// p = Runtime.getRuntime().exec("su");
+			ensureBluetoothDiscoverability();
+		} catch (Exception e) {
+
+		}
 	}
 
 	protected void registerListeners() {
@@ -208,80 +188,30 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 	public void onStop() {
 		stopAdapter();
 		cancelScheduledTasks();
-		try {
-			sManager.unregisterListener(this);
-		} catch (NullPointerException e) {
-
-		}
-		try {
-			File card = Environment.getExternalStorageDirectory();
-			File directory = new File(card.getAbsolutePath()
-					+ "/accelerometerdata");
-			directory.mkdirs();
-
-			String dayString = "";
-			int day = Calendar.DAY_OF_MONTH;
-
-			if (day < 10) {
-				dayString = "0" + day;
-			} else {
-				dayString += day;
-			}
-
-			String monthString = "";
-			int month = Calendar.MONTH + 1;
-
-			if (month < 10) {
-				monthString = "0" + month;
-			} else {
-				monthString += month;
-			}
-			String fileName = GlobalState.playerIDNumber + "_tag_"
-					+ Calendar.YEAR + "-" + dayString + "-" + monthString
-					+ "_0";
-
-			File sampleFile = new File(directory, fileName);
-			sampleFile.createNewFile();
-
-			FileWriter fw = new FileWriter(sampleFile);
-
-			for (AccelerometerData data : accelerationSamples) {
-				fw.write(data.getX() + " " + data.getY() + " " + data.getZ()
-						+ "\n");
-			}
-			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			Log.d("WRITEACCELEROMETER", "File write failed");
-		}
 
 		super.onStop();
 	}
 
 	@Override
 	public void onBackPressed() {
-		stopAdapter();
-		unregisterReceiver(discoverReceiver);
-		cancelScheduledTasks();
-		adapter.disable();
-		gotoJoinStartActivity();
+		// This is meant to make the Back button inactive for this screen
+	}
+
+	public void onAttachedToWindow() {
+		this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
+		super.onAttachedToWindow();
 	}
 
 	private void stopAdapter() {
 		adapter.cancelDiscovery();
 	}
 
-	/*
-	 * private void stopScheduledItems() { if (startScheduler != null)
-	 * startScheduler.cancel(); if (startTask != null) startTask.cancel(); }
-	 */
-
 	private void gotoJoinStartActivity() {
 		// restores the name to original
 		String tokens[] = adapter.getName().split("_\\$_");
 		adapter.setName(tokens[0]);
 		// end of restore name
-		Intent restart = new Intent(this, StartJoinActivity.class);
+		Intent restart = new Intent(this, SplashActivity.class);
 		startActivity(restart);
 	}
 
@@ -303,8 +233,6 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 			deviceDiscoveredHandler(intent);
 		else if (isDiscoveryFinished(action))
 			discoveryFinishedHandler();
-		else if (isDiscoverableChange(action))
-			endDiscoverableHandler(intent);
 	}
 
 	private void deviceDiscoveredHandler(Intent intent) {
@@ -317,8 +245,8 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 	}
 
 	private boolean isPlayer(BluetoothDevice device) {
-		for (Player player : playerList) {
-			if (player.getAddress().equals(device.getAddress())) {
+		for (String player : playerList) {
+			if (player.equals(device.getName())) {
 				return true;
 			}
 		}
@@ -338,27 +266,27 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 	private void setScoreFromSignalStrength(BluetoothDevice device,
 			short strength) {
 		if (thisPlayerIsIt())
-			addFoundPoints(strength);
+			addFoundPoints(device, strength);
 	}
 
 	private boolean thisPlayerIsIt() {
-		return it.getAddress().equals(adapter.getAddress());
+		return it.equals(adapter.getName());
 	}
 
-	/*
-	 * private boolean foundPlayerIsIt(BluetoothDevice device) { return
-	 * it.getAddress().equals(device.getAddress()); }
-	 */
-
-	private void addFoundPoints(short strength) {
-		score += (SCORE_OFFSET - strength);
-		updateScoreLabel();
+	private void addFoundPoints(BluetoothDevice device, short strength) {
+		String deviceName = device.getName();
+		if (isPlayer(device)) {
+			Integer oldPointsLeeched = GlobalState.scoreMap.get(device
+					.getName());
+			if (oldPointsLeeched == null) {
+				oldPointsLeeched = 0;
+			}
+			oldPointsLeeched += (SCORE_OFFSET - strength);
+			GlobalState.scoreMap.put(deviceName, oldPointsLeeched);
+			score += (SCORE_OFFSET - strength);
+			updateScoreLabel();
+		}
 	}
-
-	/*
-	 * private void loseFoundPoints(short strength) { score -= (SCORE_OFFSET -
-	 * strength); updateScoreLabel(); }
-	 */
 
 	private void updateScoreLabel() {
 		setScoreText("Your score: " + intToString(score));
@@ -371,17 +299,36 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 	private void discoveryFinishedHandler() {
 		setItLabel();
 
-		if (thisPlayerIsIt())
-			adapter.startDiscovery();
-		if (thisPlayerIsIt() && !devicesFound()) {
-			if (score - 10 < 0) {
-				score = 0;
-				setScoreText("Your Score: " + intToString(score));
-			} else
-				setScoreText("Your Score: " + intToString(score -= 10));
-		}
+		resetDiscoveryIfIt();
+		nobodyDiscoveredHandler();
 
 		clearDiscoveredDevices();
+	}
+
+	private void resetDiscoveryIfIt() {
+		if (thisPlayerIsIt())
+			adapter.startDiscovery();
+	}
+
+	
+
+	private void nobodyDiscoveredHandler() {
+		if (isItAndFoundNobody()) {
+			if (scoreWillBeLessThanZero()) {
+				score = 0;
+			} else {
+				score -= 10;
+			}
+			updateScoreLabel();
+		}
+	}
+	
+	private boolean isItAndFoundNobody() {
+		return thisPlayerIsIt() && !devicesFound();
+	}
+
+	private boolean scoreWillBeLessThanZero() {
+		return (score - 10) < 0;
 	}
 
 	private void clearDiscoveredDevices() {
@@ -389,29 +336,37 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 	}
 
 	private void cancelScheduledTasks() {
+		cancelDiscoveryTimers();
+		cancelItTimers();
+		cancelStartTimers();
+	}
+
+	private void cancelDiscoveryTimers() {
 		if (cancelScheduler != null)
 			cancelScheduler.cancel();
+	}
+
+	private void cancelItTimers() {
 		if (itScheduler != null)
 			itScheduler.cancel();
-		if (startScheduler != null)
-			startScheduler.cancel();
-		if (startTask != null)
-			startTask.cancel();
 		if (itTask != null)
 			itTask.cancel();
 	}
 
-	private void endDiscoverableHandler(Intent intent) {
-		int discoverState = getDiscoverState(intent);
-		if (!isDiscoverableState(discoverState)) {
-			unregisterReceiver(discoverReceiver);
-			cancelScheduledTasks();
-			adapter.setName(adapter.getName() + "__" + score);
-			loadScore.putExtra("FINAL_SCORE", score);
-			loadScore.putParcelableArrayListExtra("PLAYERS", playerList);
-			startActivity(loadScore);
-		}
+	private void cancelStartTimers() {
+		if (startScheduler != null)
+			startScheduler.cancel();
+		if (startTask != null)
+			startTask.cancel();
 	}
+
+	/*
+	 * private void endDiscoverableHandler(Intent intent) { int discoverState =
+	 * getDiscoverState(intent); if (!isDiscoverableState(discoverState)) {
+	 * unregisterReceiver(discoverReceiver); cancelScheduledTasks();
+	 * adapter.setName(adapter.getName() + "__" + score);
+	 * loadScore.putExtra("FINAL_SCORE", score); startActivity(loadScore); } }
+	 */
 
 	private void initSound() {
 		pool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
@@ -454,6 +409,7 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 		public void run() {
 			runOnUiThread(new Runnable() {
 				public void run() {
+					ensureBluetoothDiscoverability();
 					setNextIt();
 					setItLabel();
 					playItAlert();
@@ -464,56 +420,20 @@ public class DevicesTrackerActivity extends BluetoothActivity implements
 
 		private void setNextIt() {
 			index++;
-			it = playerList.get(index);
+			if (index < playerList.length)
+				it = playerList[index];
 		}
 
 	}
 
-	public void onAccuracyChanged(Sensor arg0, int arg1) {
-		// Not implemented
+	private class EndTask extends TimerTask {
+		public void run() {
+			unregisterReceiver(discoverReceiver);
+			cancelScheduledTasks();
 
-	}
-
-	public void onSensorChanged(SensorEvent event) {
-		accelerationSamples.add(new AccelerometerData(event.values[0],
-				event.values[1], event.values[2]));
-
-	}
-
-	private class AccelerometerData {
-		private float x;
-		private float y;
-		private float z;
-
-		public AccelerometerData(float x, float y, float z) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
+			adapter.setName(adapter.getName() + "__" + score);
+			loadScore.putExtra("FINAL_SCORE", score);
+			startActivity(loadScore);
 		}
-
-		public float getX() {
-			return x;
-		}
-
-		public void setX(float x) {
-			this.x = x;
-		}
-
-		public float getY() {
-			return y;
-		}
-
-		public void setY(float y) {
-			this.y = y;
-		}
-
-		public float getZ() {
-			return z;
-		}
-
-		public void setZ(float z) {
-			this.z = z;
-		}
-
 	}
 }
