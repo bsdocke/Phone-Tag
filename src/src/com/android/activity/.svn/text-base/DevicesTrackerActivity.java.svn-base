@@ -1,0 +1,197 @@
+package com.android.activity;
+
+import java.util.Timer;
+
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.timer.RefreshDevicesTask;
+
+public class DevicesTrackerActivity extends Activity {
+
+	private ArrayAdapter<String> devicesAdapter;
+	private Timer discoverScheduler;
+	private RefreshDevicesTask schedulerTask;
+	private BluetoothAdapter adapter;
+
+	public static int score;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.devices);
+		setAdapter();
+
+		TextView scoreBoard = getScoreboard();
+
+		initTimerItems();
+		initScore();
+
+		adapter.enable();
+		scoreBoard.setText(new Integer(score).toString());
+
+		if (adapter.isEnabled()) {
+			makeDiscoverable();
+			setUpBluetoothDetection();
+		} else {
+			IntentFilter filter = new IntentFilter(
+					BluetoothAdapter.ACTION_STATE_CHANGED);
+			this.registerReceiver(discoverReceiver, filter);
+		}
+	}
+
+	private void setAdapter() {
+		adapter = BluetoothAdapter.getDefaultAdapter();
+	}
+
+	private TextView getScoreboard() {
+		TextView scoreBoard = (TextView) findViewById(R.id.scoreLabel);
+		return scoreBoard;
+	}
+
+	private void initTimerItems() {
+		discoverScheduler = new Timer();
+		schedulerTask = new RefreshDevicesTask();
+	}
+
+	private void initScore() {
+		score = 500;
+	}
+
+	private void setUpBluetoothDetection() {
+		devicesAdapter = new ArrayAdapter<String>(this, R.layout.device_entry);
+		ListView list = (ListView) findViewById(R.id.deviceList);
+		list.setAdapter(devicesAdapter);
+
+		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		this.registerReceiver(discoverReceiver, filter);
+
+		IntentFilter discoverFilter = new IntentFilter(
+				BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+		this.registerReceiver(discoverReceiver, discoverFilter);
+
+		discoverScheduler.scheduleAtFixedRate(schedulerTask, 1000, 1000);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+		schedulerTask.resetCounter();
+		discoverScheduler.cancel();
+		finish();
+	}
+
+	public void onDestroy() {
+		stopAdapter();
+		stopScheduledItems();
+		
+		super.onDestroy();
+	}
+	
+	private void stopAdapter(){
+		adapter.cancelDiscovery();
+		adapter.disable();
+	}
+	
+	private void stopScheduledItems(){
+		discoverScheduler.cancel();
+		schedulerTask.resetCounter();
+	}
+
+	private void makeDiscoverable() {
+		Intent discoverableIntent = new Intent(
+				BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+		discoverableIntent.putExtra(
+				BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
+		startActivity(discoverableIntent);
+	}
+
+	private boolean bluetoothStateIsOn(int stateValue) {
+		return stateValue == BluetoothAdapter.STATE_ON;
+	}
+
+	/*private boolean isOutOfRange() {
+		return (schedulerTask.getCounter() > 3);
+	}*/
+
+	private void stateChangeHandler(int state) {
+		if (bluetoothStateIsOn(state)) {
+			makeDiscoverable();
+			setUpBluetoothDetection();
+		}
+	}
+
+	private String intToString(int value) {
+		return Integer.toString(value);
+	}
+
+	/*private void outOfRangeHandler() {
+		if (isOutOfRange()) {
+			TextView title = (TextView) findViewById(R.id.deviceListTitle);
+			title.setText("You're it, too far");
+		}
+	}*/
+
+	private final BroadcastReceiver discoverReceiver = new BroadcastReceiver() {
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+
+			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+				deviceDiscoveredHandler(intent);
+
+				/*if (strength > -50) {
+					TextView title = (TextView) findViewById(R.id.deviceListTitle);
+					title.setText("You're it");
+				} else {
+					TextView title = (TextView) findViewById(R.id.deviceListTitle);
+					title.setText("Signal Strength");
+				}*/
+			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED
+					.equals(action)) {
+
+				score -= 10;
+				TextView scoreBoard = getScoreboard();
+
+				scoreBoard.setText(intToString(score));
+
+				//outOfRangeHandler();
+
+			} else if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
+				int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+						Short.MIN_VALUE);
+				stateChangeHandler(state);
+			}
+		}
+	};
+	
+	private void deviceDiscoveredHandler(Intent intent){
+		BluetoothDevice device = intent
+				.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+		String deviceName = device.getName();
+		short strength = intent.getShortExtra(
+				BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
+		strength = (short) Math.abs(strength);
+
+		schedulerTask.resetCounter();
+		devicesAdapter.add(deviceName + "  :  " + strength);
+		score += (110 - strength);
+
+		TextView scoreBoard = getScoreboard();
+		scoreBoard.setText(intToString(score));
+	}
+}

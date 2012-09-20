@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/directionHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="@string/howToPlayTitleText"
+        android:textColor="#5CADFF"
+        android:textSize="@dimen/inputLabelSize" />
+
+    <Button
+        android:id="@+id/howToSetUpBttn"
+        android:layout_width="@dimen/optionButtonWidth"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/directionHeader"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:background="@drawable/custom_option_button"
+        android:onClick="goToHowToSetUpActivity"
+        android:text="@string/howToSetUpTitleText"
+        android:textColor="@color/customButtonTextColor"
+        android:textSize="@dimen/optionButtonTextSize" />
+
+    <Button
+        android:id="@+id/howToPlayGameBttn"
+        android:layout_width="@dimen/optionButtonWidth"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/howToSetUpBttn"
+        android:layout_below="@+id/howToSetUpBttn"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/custom_option_button"
+        android:onClick="goToHowToPlayGameActivity"
+        android:text="@string/howToPlayGameTitleText"
+        android:textColor="@color/customButtonTextColor"
+        android:textSize="@dimen/optionButtonTextSize" />
+
+    <Button
+        android:id="@+id/howToGainPointsBttn"
+        android:layout_width="@dimen/optionButtonWidth"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/howToPlayGameBttn"
+        android:layout_below="@+id/howToPlayGameBttn"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/custom_option_button"
+        android:onClick="goToHowToGainPointsActivity"
+        android:text="@string/howToGainPointsTitleText"
+        android:textColor="@color/customButtonTextColor"
+        android:textSize="@dimen/optionButtonTextSize" />
+
+</RelativeLayout>

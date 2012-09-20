@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroller"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/directionHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:text="@string/howToPlayGameTitleText"
+            android:textColor="#5CADFF"
+            android:textSize="@dimen/inputLabelSize" />
+
+        <TextView
+            android:id="@+id/directionBody"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/directionHeader"
+            android:layout_marginTop="23dp"
+            android:gravity="center_horizontal"
+            android:text="@string/howToGameBodyText"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/directionBodySize" />
+    </RelativeLayout>
+
+</ScrollView>

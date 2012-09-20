@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/joinGameHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="@string/gameSelectionTitleText"
+        android:textColor="#5CADFF"
+        android:textSize="@dimen/inputLabelSize" />
+
+    <TextView
+        android:id="@+id/clickOnGameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/joinGameHeader"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="@string/gameSelectionBodyText" 
+        android:textSize = "20dp"/>
+
+    <ListView
+        android:id="@+id/deviceList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/clickOnGameText"
+        android:layout_marginTop="10dp" >
+    </ListView>
+
+</RelativeLayout>

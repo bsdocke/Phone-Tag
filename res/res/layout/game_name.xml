@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/setupGameHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal"
+        android:text="@string/setupTeamHeaderText"
+        android:textColor="#5CADFF"
+        android:textSize="@dimen/directionBodySize" />
+
+    <TextView
+        android:id="@+id/inputNameLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/setupGameHeader"
+        android:layout_marginBottom="30dp"
+        android:text="@string/gameNameInputText"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/directionBodySize" />
+
+    <EditText
+        android:id="@+id/gameNameField"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inputNameLabel"
+        android:hint="@string/gameNameHint"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="@dimen/optionOkCancelWidth"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gameNameField"
+        android:layout_toLeftOf="@+id/cancel"
+        android:onClick="onOkHandler"
+        android:text="@string/okText" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="@dimen/optionOkCancelWidth"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/ok"
+        android:onClick="onCancel"
+        android:text="@string/cancelText" />
+
+</RelativeLayout>
