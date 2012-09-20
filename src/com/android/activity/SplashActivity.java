@@ -87,6 +87,7 @@ public class SplashActivity extends BluetoothActivity {
 
 	private void setPlayerName() {
 		String uid = getDeviceUID();
+		Log.d("UID", "Phone UID is: " + uid);
 
 		if (isRedUID(uid)) {
 			setAdapterAndPlayerName("Red");
