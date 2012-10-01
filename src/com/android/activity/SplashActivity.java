@@ -16,9 +16,6 @@ import com.android.data.GlobalState;
 
 public class SplashActivity extends BluetoothActivity {
 
-	private static final String RED = "A000000281FE89";
-	private static final String BLACK = "A00000028251D0";
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,7 +30,6 @@ public class SplashActivity extends BluetoothActivity {
 	public void onStart() {
 		super.onStart();
 		initBluetooth();
-		setPlayerName();
 	}
 	
 	private void getRoot(){
@@ -58,18 +54,18 @@ public class SplashActivity extends BluetoothActivity {
 	private void initItOrders() {
 		GlobalState.itLists = new ArrayList<String[]>();
 
-		String[] list1 = { "Red", "Blue", "Green", "Gold", "Silver", "Black" };
-		String[] list2 = { "Red", "Green", "Black", "Silver", "Gold", "Blue" };
-		String[] list3 = { "Blue", "Green", "Silver", "Red", "Gold", "Black" };
-		String[] list4 = { "Blue", "Black", "Gold", "Silver", "Green", "Red" };
+		String[] list1 = { "Red", "Blue", "Green", "Pink", "Silver", "Black" };
+		String[] list2 = { "Red", "Green", "Black", "Silver", "Pink", "Blue" };
+		String[] list3 = { "Blue", "Green", "Silver", "Red", "Pink", "Black" };
+		String[] list4 = { "Blue", "Black", "Pink", "Silver", "Green", "Red" };
 		String[] list5 = { "Green", "Silver", "Black", "Red", "Blue", "Gold" };
 		String[] list6 = { "Green", "Gold", "Red", "Blue", "Black", "Silver" };
-		String[] list7 = { "Gold", "Red", "Green", "Black", "Silver", "Blue" };
-		String[] list8 = { "Gold", "Blue", "Silver", "Black", "Red", "Green" };
-		String[] list9 = { "Silver", "Blue", "Black", "Red", "Gold", "Green" };
-		String[] list10 = { "Silver", "Red", "Green", "Blue", "Gold", "Black" };
-		String[] list11 = { "Black", "Blue", "Green", "Silver", "Red", "Gold" };
-		String[] list12 = { "Black", "Green", "Gold", "Silver", "Blue", "Red" };
+		String[] list7 = { "Pink", "Red", "Green", "Black", "Silver", "Blue" };
+		String[] list8 = { "Pink", "Blue", "Silver", "Black", "Red", "Green" };
+		String[] list9 = { "Silver", "Blue", "Black", "Red", "Pink", "Green" };
+		String[] list10 = { "Silver", "Red", "Green", "Blue", "Pink", "Black" };
+		String[] list11 = { "Black", "Blue", "Green", "Silver", "Red", "Pink" };
+		String[] list12 = { "Black", "Green", "Pink", "Silver", "Blue", "Red" };
 
 		GlobalState.itLists.add(list1);
 		GlobalState.itLists.add(list2);
@@ -84,43 +80,7 @@ public class SplashActivity extends BluetoothActivity {
 		GlobalState.itLists.add(list11);
 		GlobalState.itLists.add(list12);
 	}
-
-	private void setPlayerName() {
-		String uid = getDeviceUID();
-
-		if (isRedUID(uid)) {
-			setAdapterAndPlayerName("Red");
-		} else if (isBlackUID(uid)) {
-			setAdapterAndPlayerName("Black");
-		} else if (uid.equals("")) {
-			//TODO Find out UID of Silver, put in test for it
-			setAdapterAndPlayerName("Silver");
-		}
-		//TODO Add remaining 3 colors and UIDs
-	}
 	
-	private String getDeviceUID(){
-		TelephonyManager tManager = getTelephonyManager();
-		return tManager.getDeviceId();
-	}
-	
-	private TelephonyManager getTelephonyManager(){
-		return (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-	}
-
-	private boolean isRedUID(String uid) {
-		return uid.equals(RED);
-	}
-
-	private boolean isBlackUID(String uid) {
-		return uid.equals(BLACK);
-	}
-
-	private void setAdapterAndPlayerName(String name) {
-		adapter.setName(name);
-		GlobalState.playerName = name;
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
