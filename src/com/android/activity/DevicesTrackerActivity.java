@@ -310,8 +310,6 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 			adapter.startDiscovery();
 	}
 
-	
-
 	private void nobodyDiscoveredHandler() {
 		if (isItAndFoundNobody()) {
 			if (scoreWillBeLessThanZero()) {
@@ -322,7 +320,7 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 			updateScoreLabel();
 		}
 	}
-	
+
 	private boolean isItAndFoundNobody() {
 		return thisPlayerIsIt() && !devicesFound();
 	}
@@ -390,14 +388,14 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 		Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		vibe.vibrate(length);
 	}
-	
-	private boolean isPlaying(String playerID){
-		for(int i =0; i < playerList.length;i++){
-			if(playerID.equals(GlobalState.currentPlayers[i])){
+
+	private boolean isPlaying(String playerID) {
+		for (int i = 0; i < playerList.length; i++) {
+			if (playerID.equals(GlobalState.currentPlayers.get(i))) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -427,17 +425,17 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 			});
 
 		}
+	}
 
-		private void setNextIt() {
-			index++;
-			if (index < playerList.length){
-				if(isPlaying(playerList[index])){
-					it = playerList[index];	
-				}
-				else{
-					setNextIt();
-				}
+	private void setNextIt() {
+		index++;
+		if (index < playerList.length) {
+			if (isPlaying(playerList[index])) {
+				it = playerList[index];
+			} else {
+				setNextIt();
 			}
+		}
 
 	}
 

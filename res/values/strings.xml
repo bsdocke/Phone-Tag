@@ -39,7 +39,7 @@
            will vibrate when a different person is \"IT\" and tell you if you are \"IT.\" \n</string>
     <string name="howToGainPointsBodyText">You can only gain points during the time you are \"IT.\" You receive points for every 
 	    player you are close to.</string>
-    <string name="startGameMenuOption">Start Game</string>
+    <string name="startGameMenuOption">Settings</string>
     <string name="helpMenuOption">Help</string>
     <string name="spinnerPrompt">Select Phone Color</string>
     <string name="chk_blk">Black</string>
