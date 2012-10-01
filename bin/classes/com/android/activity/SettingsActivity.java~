@@ -1,0 +1,5 @@
+package com.android.activity;
+
+public class SettingsActivity extends Activity{
+    public void onCreate(Bundle 
+}

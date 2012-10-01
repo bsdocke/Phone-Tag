@@ -430,9 +430,14 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 
 		private void setNextIt() {
 			index++;
-			if (index < playerList.length && isPlaying(playerList[index]))
-				it = playerList[index];
-		}
+			if (index < playerList.length){
+				if(isPlaying(playerList[index])){
+					it = playerList[index];	
+				}
+				else{
+					setNextIt();
+				}
+			}
 
 	}
 
