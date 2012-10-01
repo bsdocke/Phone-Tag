@@ -67,7 +67,7 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		GlobalState.scoreMap = new HashMap<String, Integer>();
 
 		gameStart();
-		
+
 		setAdapter();
 		initTimerItems();
 		initScoreItems(START_SCORE);
@@ -88,7 +88,7 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	private void setItOrder() {
 		int length = playerList.length;
-		int interval = 62000;//(GAME_DURATION / length) * 1000;
+		int interval = 62000;// (GAME_DURATION / length) * 1000;
 
 		updateIt();
 		setItLabel();
@@ -381,13 +381,17 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	private void playItAlert() {
 
-		if (thisPlayerIsIt()) {
-			adapter.startDiscovery();
-			startScheduler.scheduleAtFixedRate(startTask, 4000, 4000);
-			pool.play(soundID, 1, 1, 1, 0, 1);
-		} else if (startScheduler != null) {
-			startTask.cancel();
-			startTask = new StartDiscoveryTask();
+		try {
+			if (thisPlayerIsIt()) {
+				adapter.startDiscovery();
+				startScheduler.scheduleAtFixedRate(startTask, 4000, 4000);
+				pool.play(soundID, 1, 1, 1, 0, 1);
+			} else if (startScheduler != null) {
+				startTask.cancel();
+				startTask = new StartDiscoveryTask();
+			}
+		} catch (IllegalStateException e) {
+			//Do nothing, the timer has already been cancelled;
 		}
 		makeVibrate(500);
 	}
@@ -399,7 +403,8 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	private boolean isPlaying(String playerID) {
 		for (int i = 0; i < playerList.length; i++) {
-			if (i < GlobalState.currentPlayers.size() && playerID.equals(GlobalState.currentPlayers.get(i))) {
+			if (i < GlobalState.currentPlayers.size()
+					&& playerID.equals(GlobalState.currentPlayers.get(i))) {
 				return true;
 			}
 		}
@@ -444,11 +449,10 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 			} else {
 				setNextIt();
 			}
-		}
-		else{
+		} else {
 			cancelScheduledTasks();
 			adapter.cancelDiscovery();
-			
+
 			adapter.setName(adapter.getName() + "__" + score);
 			loadScore.putExtra("FINAL_SCORE", score);
 			startActivity(loadScore);
@@ -462,20 +466,20 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 			cancelScheduledTasks();
 
 			String newName = adapter.getName();
-			   for (int i = 0; i < GlobalState.itOrder.length; i++) {
-			    if (GlobalState.scoreMap.get(GlobalState.itOrder[i]) == null) {
-			     newName += "_0";
-			    } else {
-			     newName += "_"
-			       + GlobalState.scoreMap.get(GlobalState.itOrder[i]);
-			     Log.d("SCORE VAL", GlobalState.itOrder[i] + ": "
-			       + GlobalState.scoreMap.get(GlobalState.itOrder[i]));
-			    }
-			   }
-			   adapter.setName(newName);
-			   GlobalState.myScore = score;
-			   releaseService();
-			   
+			for (int i = 0; i < GlobalState.itOrder.length; i++) {
+				if (GlobalState.scoreMap.get(GlobalState.itOrder[i]) == null) {
+					newName += "_0";
+				} else {
+					newName += "_"
+							+ GlobalState.scoreMap.get(GlobalState.itOrder[i]);
+					Log.d("SCORE VAL", GlobalState.itOrder[i] + ": "
+							+ GlobalState.scoreMap.get(GlobalState.itOrder[i]));
+				}
+			}
+			adapter.setName(newName);
+			GlobalState.myScore = score;
+			releaseService();
+
 			startActivity(loadScore);
 		}
 	}
