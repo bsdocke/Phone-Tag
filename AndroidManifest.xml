@@ -86,6 +86,10 @@
             android:name=".HowToGainPointsActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
+        <activity
+            android:name=".SettingsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
     </application>
 
 </manifest>
