@@ -48,6 +48,7 @@
     <string name="chk_pnk">Pink</string>
     <string name="chk_red">Red</string>
     <string name="chk_sil">Silver</string>
+    <string name="saveBtn">Save</string>
     
     <string-array name="color_options">
         <item>Black</item>

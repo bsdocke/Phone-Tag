@@ -2,64 +2,75 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
-    
-     <Spinner
+
+    <Spinner
         android:id="@+id/spinner1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="22dp"
         android:entries="@array/color_options"
-        android:prompt="@string/spinnerPrompt"
-        android:layout_marginTop="50dp"/>
+        android:prompt="@string/spinnerPrompt" />
+
+    <CheckBox
+        android:id="@+id/checkGreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner1"
+        android:layout_marginTop="25dp"
+        android:text="@string/chk_grn" />
 
     <CheckBox
         android:id="@+id/checkBlack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spinner1"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="25dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/checkGreen"
+        android:layout_marginTop="10dp"
         android:text="@string/chk_blk" />
-    
-    <CheckBox
-        android:id="@+id/checkBlue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="25dp"
-        android:text="@string/chk_blue" />
-    
-    <CheckBox
-        android:id="@+id/checkGreen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="25dp"
-        android:text="@string/chk_grn" />
-    
+
     <CheckBox
         android:id="@+id/checkPink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="25dp"
+        android:layout_below="@+id/checkBlack"
+        android:layout_marginTop="10dp"
         android:text="@string/chk_pnk" />
-    
+
     <CheckBox
         android:id="@+id/checkRed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="25dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/checkPink"
+        android:layout_marginTop="10dp"
         android:text="@string/chk_red" />
-    
+
+    <CheckBox
+        android:id="@+id/checkBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/checkRed"
+        android:layout_marginTop="10dp"
+        android:text="@string/chk_blue" />
+
     <CheckBox
         android:id="@+id/checkSilver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="25dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/checkBlue"
+        android:layout_marginTop="10dp"
         android:text="@string/chk_sil" />
     
+    <Button 
+        android:id="@+id/saveButton"
+        android:layout_width="100dip"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/checkSilver"
+        android:layout_marginTop="10dp"
+        android:text="@string/saveBtn"/>
 
 </RelativeLayout>
