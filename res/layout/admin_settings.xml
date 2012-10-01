@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+    
+     <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:entries="@array/color_options"
+        android:prompt="@string/spinnerPrompt"
+        android:layout_marginTop="50dp"/>
+
+    <CheckBox
+        android:id="@+id/checkBlack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner1"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/chk_blk" />
+    
+    <CheckBox
+        android:id="@+id/checkBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/chk_blue" />
+    
+    <CheckBox
+        android:id="@+id/checkGreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/chk_grn" />
+    
+    <CheckBox
+        android:id="@+id/checkPink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/chk_pnk" />
+    
+    <CheckBox
+        android:id="@+id/checkRed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/chk_red" />
+    
+    <CheckBox
+        android:id="@+id/checkSilver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="25dp"
+        android:text="@string/chk_sil" />
+    
+
+</RelativeLayout>

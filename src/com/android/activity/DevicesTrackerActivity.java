@@ -390,6 +390,16 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 		Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		vibe.vibrate(length);
 	}
+	
+	private boolean isPlaying(String playerID){
+		for(int i =0; i < playerList.length;i++){
+			if(playerID.equals(GlobalState.currentPlayers[i])){
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 	public class CancelDiscoveryTask extends TimerTask {
 		@Override
@@ -420,7 +430,7 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 
 		private void setNextIt() {
 			index++;
-			if (index < playerList.length)
+			if (index < playerList.length && isPlaying(playerList[index]))
 				it = playerList[index];
 		}
 

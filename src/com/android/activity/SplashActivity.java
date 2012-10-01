@@ -80,6 +80,29 @@ public class SplashActivity extends BluetoothActivity {
 		GlobalState.itLists.add(list11);
 		GlobalState.itLists.add(list12);
 	}
+<<<<<<< HEAD
+=======
+
+	private void setPlayerName() {
+		String uid = getDeviceUID();
+		Log.d("UID", "Phone UID is: " + uid);
+
+		if (isRedUID(uid)) {
+			setAdapterAndPlayerName("Red");
+		} else if (isBlackUID(uid)) {
+			setAdapterAndPlayerName("Black");
+		} else if (uid.equals("")) {
+			//TODO Find out UID of Silver, put in test for it
+			setAdapterAndPlayerName("Silver");
+		}
+		//TODO Add remaining 3 colors and UIDs
+	}
+	
+	private String getDeviceUID(){
+		TelephonyManager tManager = getTelephonyManager();
+		return tManager.getDeviceId();
+	}
+>>>>>>> 32ff63577ff7dc24ea6ad1357c951d767b15ed1d
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

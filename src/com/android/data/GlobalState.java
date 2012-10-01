@@ -12,4 +12,8 @@ public class GlobalState {
 	public static String[] itOrder;
 	public static HashMap<String, Integer> scoreMap;
 	public static String playerName;
+        public static String[] currentPlayers;
+
+
+
 }
