@@ -50,7 +50,7 @@ public class SettingsActivity extends Activity {
 		}
 	}
 	
-	private void onSaveClick(View view){
+	public void onSaveClick(View view){
 		CheckBox silver = (CheckBox)findViewById(R.id.checkSilver);
 		CheckBox blue = (CheckBox)findViewById(R.id.checkBlue);
 		CheckBox red = (CheckBox)findViewById(R.id.checkRed);
