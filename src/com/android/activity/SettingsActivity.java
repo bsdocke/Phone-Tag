@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.data.GlobalState;
 
@@ -81,5 +82,7 @@ public class SettingsActivity extends Activity {
 		if(green.isChecked()){
 			GlobalState.currentPlayers.add(green.getText().toString());
 		}
+		
+		Toast.makeText(this, BluetoothAdapter.getDefaultAdapter().getName() + "is you", Toast.LENGTH_LONG).show();
 	}
 }

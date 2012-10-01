@@ -74,7 +74,7 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 	}
 
 	private void setPlayerListFromExtra() {
-		int itOrderIndex = Calendar.MINUTE / 12;
+		int itOrderIndex = Calendar.MINUTE / 5;
 		playerList = GlobalState.itLists.get(itOrderIndex);
 		GlobalState.itOrder = playerList;
 	}
@@ -94,8 +94,13 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 	}
 
 	private void updateIt() {
-		if (index < playerList.length)
-			it = playerList[index];
+		if (index < playerList.length) {
+			if (isPlaying(playerList[index])) {
+				it = playerList[index];
+			} else {
+				setNextIt();
+			}
+		}
 	}
 
 	private void setItScheduling(int interval) {
