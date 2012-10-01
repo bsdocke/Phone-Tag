@@ -3,9 +3,11 @@ package com.android.activity;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.Spinner;
 
 import com.android.data.GlobalState;
 
@@ -57,6 +59,9 @@ public class SettingsActivity extends Activity {
 		CheckBox green = (CheckBox)findViewById(R.id.checkGreen);
 		
 		GlobalState.currentPlayers = new ArrayList<String>();
+		Spinner adaptName = (Spinner) findViewById(R.id.spinner1);
+		String name = (String)adaptName.getSelectedItem();
+		BluetoothAdapter.getDefaultAdapter().setName(name);
 		
 		if(silver.isChecked()){
 			GlobalState.currentPlayers.add(silver.getText().toString());
