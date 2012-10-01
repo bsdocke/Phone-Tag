@@ -41,5 +41,21 @@
 	    player you are close to.</string>
     <string name="startGameMenuOption">Start Game</string>
     <string name="helpMenuOption">Help</string>
+    <string name="spinnerPrompt">Select Phone Color</string>
+    <string name="chk_blk">Black</string>
+    <string name="chk_blue">Blue</string>
+    <string name="chk_grn">Green</string>
+    <string name="chk_pnk">Pink</string>
+    <string name="chk_red">Red</string>
+    <string name="chk_sil">Silver</string>
+    
+    <string-array name="color_options">
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Pink</item>
+        <item>Red</item>
+        <item>Silver</item>
+    </string-array>
 
 </resources>
