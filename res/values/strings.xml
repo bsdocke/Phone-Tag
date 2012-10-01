@@ -2,7 +2,7 @@
 <resources>
 
     <string name="inputID">Enter your ID Number:</string>
-    <string name="app_name">Tele-Tag</string>
+    <string name="app_name">Space Rayders</string>
     <string name="inputHint">ID Number</string>
     <string name="playerNameHint">Player Name</string>
     <string name="gameNameHint">Name of Game</string>
