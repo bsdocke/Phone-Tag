@@ -391,7 +391,7 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 
 	private boolean isPlaying(String playerID) {
 		for (int i = 0; i < playerList.length; i++) {
-			if (playerID.equals(GlobalState.currentPlayers.get(i))) {
+			if (i < GlobalState.currentPlayers.size() && playerID.equals(GlobalState.currentPlayers.get(i))) {
 				return true;
 			}
 		}
@@ -435,6 +435,14 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 			} else {
 				setNextIt();
 			}
+		}
+		else{
+			cancelScheduledTasks();
+			adapter.cancelDiscovery();
+			
+			adapter.setName(adapter.getName() + "__" + score);
+			loadScore.putExtra("FINAL_SCORE", score);
+			startActivity(loadScore);
 		}
 
 	}

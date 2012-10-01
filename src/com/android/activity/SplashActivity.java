@@ -3,8 +3,6 @@ package com.android.activity;
 import java.util.ArrayList;
 
 import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Spinner;
 
 import com.android.data.GlobalState;
 
@@ -42,6 +41,7 @@ public class SplashActivity extends BluetoothActivity {
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
+	            		
 	    }
 	}
 	
@@ -100,20 +100,6 @@ public class SplashActivity extends BluetoothActivity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.startgame, menu);
 		return true;
-	}
-
-	protected BroadcastReceiver initReceiver() {
-		return new BroadcastReceiver() {
-			public void onReceive(Context context, Intent intent) {
-				int state = getBluetoothState(intent);
-				bluetoothOffHandler(state);
-			}
-		};
-	}
-
-	private void bluetoothOffHandler(int state) {
-		if (isBluetoothStateOff(state))
-			adapter.enable();
 	}
 
 	public void gotoSetJoinNameActivity(View view) {
