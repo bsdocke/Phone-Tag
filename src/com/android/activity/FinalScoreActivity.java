@@ -23,7 +23,7 @@ public class FinalScoreActivity extends BluetoothActivity {
 
 	Timer discoverTimer;
 	Timer cancelTimer;
-	int itIndex = 0;
+	int itIndex = 1;
 
 	ScoreTask scoreTask;
 	CancelDiscoveryTask cancelTask;
@@ -31,7 +31,7 @@ public class FinalScoreActivity extends BluetoothActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.final_score);
-
+		itIndex = 1;
 		setBackground();
 	}
 
@@ -158,7 +158,7 @@ public class FinalScoreActivity extends BluetoothActivity {
 
 						if (isPlayer) {
 							GlobalState.myScore -= Integer
-									.parseInt(nameTokens[itIndex + 1]);
+									.parseInt(nameTokens[itIndex]);
 							playerNames.add(name);
 							// TextView scoreView =
 							// (TextView)findViewById(R.id.scoreList);

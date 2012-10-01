@@ -430,7 +430,7 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		public void run() {
 			runOnUiThread(new Runnable() {
 				public void run() {
-					ensureBluetoothDiscoverability();
+					//ensureBluetoothDiscoverability();
 					setNextIt();
 					setItLabel();
 					playItAlert();
