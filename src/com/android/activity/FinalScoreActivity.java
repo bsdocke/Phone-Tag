@@ -1,7 +1,6 @@
 package com.android.activity;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -12,21 +11,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.util.Log;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.data.GlobalState;
-import com.android.data.Player;
 
 public class FinalScoreActivity extends BluetoothActivity {
-
-	ArrayAdapter<ScoreObject> scoreAdapter;
 
 	ArrayList<String> playerNames;
 
 	Timer discoverTimer;
 	Timer cancelTimer;
+	int itIndex = 0;
 
 	ScoreTask scoreTask;
 	CancelDiscoveryTask cancelTask;
@@ -35,9 +32,7 @@ public class FinalScoreActivity extends BluetoothActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.final_score);
 
-		RelativeLayout relLay = (RelativeLayout) findViewById(R.id.scoreLayout);
-		Drawable bg = relLay.getBackground();
-		bg.setAlpha(100);
+		setBackground();
 	}
 
 	public void onStart() {
@@ -48,22 +43,35 @@ public class FinalScoreActivity extends BluetoothActivity {
 	private void init() {
 		setAdapter();
 		initializeArrayList();
-		initializeArrayAdapter();
-		addMyScore();
-
 		initializeTimers();
+		discoverTimer.schedule(scoreTask, getScanDelay());
+
 		collectScores();
+	}
+
+	private int getScanDelay() {
+		String name = adapter.getName().split("_")[0];
+		int delay = 0;
+		for (int i = 0; i < GlobalState.itOrder.length; i++) {
+			if (GlobalState.itOrder[i].equals(name)) {
+				return delay;
+			} else {
+				itIndex++;
+				delay += 10000;
+			}
+		}
+
+		return delay;
+	}
+
+	private void setBackground() {
+		RelativeLayout relLay = (RelativeLayout) findViewById(R.id.scoreLayout);
+		Drawable bg = relLay.getBackground();
+		bg.setAlpha(100);
 	}
 
 	private void initializeArrayList() {
 		playerNames = new ArrayList<String>();
-	}
-
-	private void initializeArrayAdapter() {
-		scoreAdapter = new ArrayAdapter<ScoreObject>(this,
-				R.layout.device_entry);
-		ListView list = (ListView) findViewById(R.id.scoreList);
-		list.setAdapter(scoreAdapter);
 	}
 
 	private void initializeTimers() {
@@ -71,24 +79,11 @@ public class FinalScoreActivity extends BluetoothActivity {
 		cancelTimer = new Timer();
 		scoreTask = new ScoreTask();
 		cancelTask = new CancelDiscoveryTask();
-
-		double interval = Math.random();
-		interval = 5 + (interval * 6);
-		discoverTimer.scheduleAtFixedRate(scoreTask, 0, 10000);
-		cancelTimer.scheduleAtFixedRate(cancelTask,
-				(long) Math.floor(interval * 1000), 10000);
-
-	}
-
-	private void addMyScore() {
-		String score = Integer.toString(getIntent().getIntExtra("FINAL_SCORE",
-				Short.MIN_VALUE));
-		String name = adapter.getName().split("_\\$_")[0];
-		scoreAdapter.add(new ScoreObject(name, Integer.parseInt(score)));
 	}
 
 	private void collectScores() {
-		makeDiscoverable(120);
+		listenForScores();
+		this.ensureBluetoothDiscoverability();
 	}
 
 	public void makeDiscoverable(int duration) {
@@ -103,7 +98,7 @@ public class FinalScoreActivity extends BluetoothActivity {
 	public void onStop() {
 		// unregisterReceiver(discoverReceiver);
 		cancelTimers();
-		adapter.disable();//
+		// adapter.disable();//
 		super.onStop();
 	}
 
@@ -136,8 +131,7 @@ public class FinalScoreActivity extends BluetoothActivity {
 
 	private void gotoSplashActivity() {
 		cancelTimers();
-		unregisterReceiver(discoverReceiver);
-		scoreAdapter.clear();
+		// unregisterReceiver(discoverReceiver);
 		adapter.cancelDiscovery();
 		Intent restart = new Intent(this, SplashActivity.class);
 		startActivity(restart);
@@ -152,54 +146,52 @@ public class FinalScoreActivity extends BluetoothActivity {
 					BluetoothDevice device = getRemoteDevice(intent);
 					if (isPhone(device) && !hasBeenFound(device.getName())) {
 						String name = device.getName();
-						String[] nameTokens = name.split("__");
-						if (nameTokens.length > 2) {
-							boolean isPlayer = false;
-							for (String play : GlobalState.itOrder) {
-								if (nameTokens[0].equals(play)) {
-									isPlayer = true;
-								}
-							}
+						String[] nameTokens = name.split("_");
+						name = nameTokens[0];
 
-							if (isPlayer) {
-								playerNames.add(nameTokens[0]);
-								ScoreObject scoreItem = new ScoreObject(
-										nameTokens[0].split("_\\$_")[0],
-										Integer.parseInt(nameTokens[1]));
-								scoreAdapter.add(scoreItem);
-								orderScores();
-								if (scoreAdapter.getCount() == GlobalState.itOrder.length) {
-									adapter.cancelDiscovery();
-									cancelTimers();
-								}
+						boolean isPlayer = false;
+						for (String play : GlobalState.itOrder) {
+							if (name.equals(play)) {
+								isPlayer = true;
 							}
 						}
+
+						if (isPlayer) {
+							GlobalState.myScore -= Integer
+									.parseInt(nameTokens[itIndex + 1]);
+							playerNames.add(name);
+							// TextView scoreView =
+							// (TextView)findViewById(R.id.scoreList);
+						}
+
 					}
+				} else if (action
+						.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
+					TextView scoreView = (TextView) findViewById(R.id.scoreList);
+					scoreView.setText(Integer.toString(GlobalState.myScore));
 				}
 			}
 		};
 	}
 
-	private void orderScores() {
-		scoreAdapter.sort(new Comparator<ScoreObject>() {
-			public int compare(ScoreObject object1, ScoreObject object2) {
-				return object1.compareTo(object2);
-			}
-		});
-	}
-
 	private boolean hasBeenFound(String name) {
-		for (String player : playerNames) {
-			if (player.equals(name)) {
-				return true;
+		if (name.split("_").length > 1) {
+			String nameToken = name.split("_")[0];
+			for (String player : playerNames) {
+				if (player.equals(nameToken)) {
+					return true;
+				}
 			}
-		}
 
-		return false;
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	private class ScoreTask extends TimerTask {
 		public void run() {
+			Log.d("BLUETOOTH", "Discovery started");
 			adapter.startDiscovery();
 		}
 	}
@@ -209,36 +201,5 @@ public class FinalScoreActivity extends BluetoothActivity {
 		public void run() {
 			adapter.cancelDiscovery();
 		}
-	}
-
-	private class ScoreObject implements Comparable<ScoreObject> {
-
-		private String playerName;
-		private int score;
-
-		public ScoreObject(String name, int score) {
-			playerName = name;
-			this.score = score;
-		}
-
-		public int getScore() {
-			return this.score;
-		}
-
-		public int compareTo(ScoreObject another) {
-			if (this.score < another.getScore())
-				return 1;
-			else if (this.score > another.getScore())
-				return -1;
-			else if (this.score == another.getScore())
-				return 0;
-
-			return 0;
-		}
-
-		public String toString() {
-			return this.playerName + " - " + this.score;
-		}
-
 	}
 }

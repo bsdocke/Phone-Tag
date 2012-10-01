@@ -13,5 +13,6 @@ public class GlobalState {
 	public static HashMap<String, Integer> scoreMap;
 	public static String playerName;
 	public static ArrayList<String> currentPlayers;
+	public static int myScore;
 
 }

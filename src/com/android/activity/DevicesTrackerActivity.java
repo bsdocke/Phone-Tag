@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.android.data.GlobalState;
 
-public class DevicesTrackerActivity extends BluetoothActivity {
+public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	private Intent loadScore;
 
@@ -46,7 +46,7 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 
 	private static final int START_SCORE = 0;
 	private static final int SCORE_OFFSET = 100;
-	private static final int GAME_DURATION = 360;
+	private static final int GAME_DURATION = 370;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,8 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 		setFinalScoreIntent();
 		GlobalState.scoreMap = new HashMap<String, Integer>();
 
+		gameStart();
+		
 		setAdapter();
 		initTimerItems();
 		initScoreItems(START_SCORE);
@@ -74,7 +76,8 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 	}
 
 	private void setPlayerListFromExtra() {
-		int itOrderIndex = Calendar.MINUTE / 5;
+		Calendar c = Calendar.getInstance();
+		int itOrderIndex = c.get(Calendar.MINUTE) / 5;
 		playerList = GlobalState.itLists.get(itOrderIndex);
 		GlobalState.itOrder = playerList;
 	}
@@ -85,7 +88,7 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 
 	private void setItOrder() {
 		int length = playerList.length;
-		int interval = (GAME_DURATION / length) * 1000;
+		int interval = 62000;//(GAME_DURATION / length) * 1000;
 
 		updateIt();
 		setItLabel();
@@ -436,6 +439,7 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 		index++;
 		if (index < playerList.length) {
 			if (isPlaying(playerList[index])) {
+				ensureBluetoothDiscoverability();
 				it = playerList[index];
 			} else {
 				setNextIt();
@@ -457,8 +461,21 @@ public class DevicesTrackerActivity extends BluetoothActivity {
 			unregisterReceiver(discoverReceiver);
 			cancelScheduledTasks();
 
-			adapter.setName(adapter.getName() + "__" + score);
-			loadScore.putExtra("FINAL_SCORE", score);
+			String newName = adapter.getName();
+			   for (int i = 0; i < GlobalState.itOrder.length; i++) {
+			    if (GlobalState.scoreMap.get(GlobalState.itOrder[i]) == null) {
+			     newName += "_0";
+			    } else {
+			     newName += "_"
+			       + GlobalState.scoreMap.get(GlobalState.itOrder[i]);
+			     Log.d("SCORE VAL", GlobalState.itOrder[i] + ": "
+			       + GlobalState.scoreMap.get(GlobalState.itOrder[i]));
+			    }
+			   }
+			   adapter.setName(newName);
+			   GlobalState.myScore = score;
+			   releaseService();
+			   
 			startActivity(loadScore);
 		}
 	}
