@@ -61,7 +61,7 @@ public abstract class RemoteServiceClient extends BluetoothActivity {
    remoteService = IAccelRemoteService.Stub
      .asInterface((IBinder) boundService);
    try {
-    remoteService.setGameNameFromService("Space Raiders");
+    remoteService.setGameNameFromService("Space Rayders");
    } catch (RemoteException e) {
     // TODO Auto-generated catch block
     e.printStackTrace();
@@ -78,7 +78,7 @@ public abstract class RemoteServiceClient extends BluetoothActivity {
   public void serviceAppendEndGame() {
    try { 
      remoteService.setEndGameFlagFromService(true); 
-     remoteService.setGameNameFromService("Enter Name and/or Level Here");
+     remoteService.setGameNameFromService("Space Rayders");
     } catch (RemoteException e) { 
      // TODO Auto-generated catch block
      e.printStackTrace(); 

@@ -25,11 +25,14 @@
         android:textSize="@dimen/directionBodySize"
         android:text="@string/finalScoreBodyText" />
     
-    <ListView
+    <TextView
         android:id="@+id/scoreList"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/finalScoreBody"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="60dip"
+        android:textSize="50dip"
         android:keepScreenOn="true" />
         
     

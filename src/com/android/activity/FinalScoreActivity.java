@@ -21,12 +21,12 @@ public class FinalScoreActivity extends BluetoothActivity {
 
 	ArrayList<String> playerNames;
 
-	Timer discoverTimer;
-	Timer cancelTimer;
+	/*Timer discoverTimer;
+	Timer cancelTimer;*/
 	int itIndex = 1;
 
-	ScoreTask scoreTask;
-	CancelDiscoveryTask cancelTask;
+/*	ScoreTask scoreTask;
+	CancelDiscoveryTask cancelTask;*/
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,10 +43,12 @@ public class FinalScoreActivity extends BluetoothActivity {
 	private void init() {
 		setAdapter();
 		initializeArrayList();
-		initializeTimers();
-		discoverTimer.schedule(scoreTask, getScanDelay());
+		TextView scoreView = (TextView) findViewById(R.id.scoreList);
+		scoreView.setText(Integer.toString(GlobalState.myScore));
+		//initializeTimers();
+		//discoverTimer.schedule(scoreTask, getScanDelay());
 
-		collectScores();
+		//collectScores();
 	}
 
 	private int getScanDelay() {
@@ -75,10 +77,10 @@ public class FinalScoreActivity extends BluetoothActivity {
 	}
 
 	private void initializeTimers() {
-		discoverTimer = new Timer();
-		cancelTimer = new Timer();
-		scoreTask = new ScoreTask();
-		cancelTask = new CancelDiscoveryTask();
+		/*discoverTimer = new Timer();
+		cancelTimer = new Timer();*/
+		/*scoreTask = new ScoreTask();
+		cancelTask = new CancelDiscoveryTask();*/
 	}
 
 	private void collectScores() {
@@ -103,14 +105,14 @@ public class FinalScoreActivity extends BluetoothActivity {
 	}
 
 	private void cancelTimers() {
-		if (timerItemDefined(discoverTimer))
-			discoverTimer.cancel();
-		if (timerItemDefined(scoreTask))
+		/*if (timerItemDefined(discoverTimer))
+			discoverTimer.cancel();*/
+		/*if (timerItemDefined(scoreTask))
 			scoreTask.cancel();
 		if (timerItemDefined(cancelTimer))
 			cancelTimer.cancel();
 		if (timerItemDefined(cancelTask))
-			cancelTask.cancel();
+			cancelTask.cancel();*/
 	}
 
 	private boolean timerItemDefined(Timer time) {
@@ -142,7 +144,7 @@ public class FinalScoreActivity extends BluetoothActivity {
 			public void onReceive(Context context, Intent intent) {
 				String action = intent.getAction();
 
-				if (isActionFound(action)) {
+	/*			if (isActionFound(action)) {
 					BluetoothDevice device = getRemoteDevice(intent);
 					if (isPhone(device) && !hasBeenFound(device.getName())) {
 						String name = device.getName();
@@ -157,15 +159,15 @@ public class FinalScoreActivity extends BluetoothActivity {
 						}
 
 						if (isPlayer) {
-							GlobalState.myScore -= Integer
-									.parseInt(nameTokens[itIndex]);
+							//GlobalState.myScore -= Integer
+							//		.parseInt(nameTokens[itIndex]);
 							playerNames.add(name);
 							// TextView scoreView =
 							// (TextView)findViewById(R.id.scoreList);
 						}
 
 					}
-				} else if (action
+				} else*/ if (action
 						.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
 					TextView scoreView = (TextView) findViewById(R.id.scoreList);
 					scoreView.setText(Integer.toString(GlobalState.myScore));
@@ -189,7 +191,7 @@ public class FinalScoreActivity extends BluetoothActivity {
 		}
 	}
 
-	private class ScoreTask extends TimerTask {
+	/*private class ScoreTask extends TimerTask {
 		public void run() {
 			Log.d("BLUETOOTH", "Discovery started");
 			adapter.startDiscovery();
@@ -202,4 +204,4 @@ public class FinalScoreActivity extends BluetoothActivity {
 			adapter.cancelDiscovery();
 		}
 	}
-}
+*/}

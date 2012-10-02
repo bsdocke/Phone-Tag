@@ -26,7 +26,7 @@
     <string name="gameSelectionButtonText">goToWaitingRoom</string>
     <string name="serverLobbyHeaderText">Please wait for players to join</string>
     <string name="finalScoreHeaderText">Final Score</string>
-    <string name="finalScoreBodyText">Please wait while everyone\'s score is collected</string>
+    <string name="finalScoreBodyText">Good job!</string>
     <string name="howToPlayTitleText">How To Play</string>
     <string name="howToSetUpTitleText">Set Up</string>
     <string name="howToPlayGameTitleText">The Game</string>

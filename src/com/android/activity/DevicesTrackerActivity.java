@@ -455,6 +455,10 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 			adapter.setName(adapter.getName() + "__" + score);
 			loadScore.putExtra("FINAL_SCORE", score);
+			
+			GlobalState.myScore = score;
+			releaseService();
+			
 			startActivity(loadScore);
 		}
 
