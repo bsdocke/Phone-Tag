@@ -1,7 +1,6 @@
 package com.android.activity;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,6 +19,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
 
 import com.android.data.GlobalState;
+import com.fitnessapps.spacerayders.R;
 
 public class DevicesTrackerActivity extends RemoteServiceClient {
 
@@ -28,11 +28,9 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 	private Timer cancelScheduler;
 	private Timer startScheduler;
 	private Timer itScheduler;
-	private Timer endScheduler;
 
 	private StartDiscoveryTask startTask;
 	private ChangeItTask itTask;
-	private EndTask endTask;
 
 	private TextView scoreBoard;
 	private int score;
@@ -46,7 +44,6 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	private static final int START_SCORE = 0;
 	private static final int SCORE_OFFSET = 100;
-	private static final int GAME_DURATION = 370;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,14 +54,17 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	public void onStart() {
 		super.onStart();
+
+		index = 0;
 		init();
+		
 	}
 
 	private void init() {
 		initSound();
-		setPlayerListFromExtra();
+		resetScore();
+		setPlayerList();
 		setFinalScoreIntent();
-		GlobalState.scoreMap = new HashMap<String, Integer>();
 
 		gameStart();
 
@@ -74,8 +74,12 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 		discoverableAccepted();
 	}
+	
+	private void resetScore(){
+		GlobalState.myScore = START_SCORE;
+	}
 
-	private void setPlayerListFromExtra() {
+	private void setPlayerList() {
 		Calendar c = Calendar.getInstance();
 		int itOrderIndex = c.get(Calendar.MINUTE) / 5;
 		playerList = GlobalState.itLists.get(itOrderIndex);
@@ -87,7 +91,7 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 	}
 
 	private void setItOrder() {
-		int length = playerList.length;
+		//int length = playerList.length;
 		int interval = 62000;// (GAME_DURATION / length) * 1000;
 
 		updateIt();
@@ -98,11 +102,15 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	private void updateIt() {
 		if (index < playerList.length) {
-			if (isPlaying(playerList[index])) {
-				it = playerList[index];
+			String player = playerList[index];
+			if (isPlaying(player)) {
+				it = player;
 			} else {
 				setNextIt();
 			}
+		}
+		else{
+			setNextIt();
 		}
 	}
 
@@ -112,44 +120,19 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		itScheduler.schedule(itTask, interval, interval);
 	}
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode > 0) {
-			discoverableAccepted();
-		} else
-			discoverableRejected();
-	}
-
 	private void discoverableAccepted() {
 		setItOrder();
 		setUpBluetoothDetection();
 	}
 
-	private void discoverableRejected() {
-		stopAdapter();
-		cancelScheduledTasks();
-		gotoJoinStartActivity();
-	}
-
 	private void setItLabel() {
 		TextView itLabel = (TextView) findViewById(R.id.itLabel);
-		String str = parseNameFromIt();
-		itLabel.setText(str + " is IT");
-	}
-
-	private String parseNameFromIt() {
-
-		String[] tokens = it.split("_\\$_");
-		return tokens[0];
+		itLabel.setText(it + " is IT");
 	}
 
 	private void initTimerItems() {
 		startScheduler = new Timer();
 		startTask = new StartDiscoveryTask();
-		endScheduler = new Timer();
-		endTask = new EndTask();
-
-		endScheduler.schedule(endTask, GAME_DURATION * 1000);
 	}
 
 	private void initScoreItems(int startScore) {
@@ -177,14 +160,8 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	protected void setUpBluetoothDetection() {
 		super.setupBluetoothDetection();
-		// Process p;
-		try {
-			Log.e("TIME EXTENDED", "1 minute");
-			// p = Runtime.getRuntime().exec("su");
-			ensureBluetoothDiscoverability();
-		} catch (Exception e) {
-
-		}
+		Log.e("TIME EXTENDED", "1 minute");
+		ensureBluetoothDiscoverability();
 	}
 
 	protected void registerListeners() {
@@ -212,15 +189,6 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	private void stopAdapter() {
 		adapter.cancelDiscovery();
-	}
-
-	private void gotoJoinStartActivity() {
-		// restores the name to original
-		String tokens[] = adapter.getName().split("_\\$_");
-		adapter.setName(tokens[0]);
-		// end of restore name
-		Intent restart = new Intent(this, SplashActivity.class);
-		startActivity(restart);
 	}
 
 	private String intToString(int value) {
@@ -278,19 +246,11 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 	}
 
 	private boolean thisPlayerIsIt() {
-		return it.equals(adapter.getName());
+		return it.equals(GlobalState.playerName);
 	}
 
 	private void addFoundPoints(BluetoothDevice device, short strength) {
-		String deviceName = device.getName();
 		if (isPlayer(device)) {
-			Integer oldPointsLeeched = GlobalState.scoreMap.get(device
-					.getName());
-			if (oldPointsLeeched == null) {
-				oldPointsLeeched = 0;
-			}
-			oldPointsLeeched += (SCORE_OFFSET - strength);
-			GlobalState.scoreMap.put(deviceName, oldPointsLeeched);
 			score += (SCORE_OFFSET - strength);
 			updateScoreLabel();
 		}
@@ -366,14 +326,6 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 			startTask.cancel();
 	}
 
-	/*
-	 * private void endDiscoverableHandler(Intent intent) { int discoverState =
-	 * getDiscoverState(intent); if (!isDiscoverableState(discoverState)) {
-	 * unregisterReceiver(discoverReceiver); cancelScheduledTasks();
-	 * adapter.setName(adapter.getName() + "__" + score);
-	 * loadScore.putExtra("FINAL_SCORE", score); startActivity(loadScore); } }
-	 */
-
 	private void initSound() {
 		pool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 		soundID = pool.load(this, R.raw.youreit, 1);
@@ -424,13 +376,41 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 			adapter.cancelDiscovery();
 		}
 	}
+	
+	private void setNextIt() {
+		index++;
+		adapter.cancelDiscovery();
+		if (index < playerList.length) {
+			Log.d("Tag", "setNextIt, index is " + index);
+			if (isPlaying(playerList[index])) {
+				Log.d("Tag", playerList[index] + "is playing");
+				ensureBluetoothDiscoverability();
+				it = playerList[index];
+			} else {
+				Log.d("Tag", "Recursively calling setNextIt");
+				setNextIt();
+			}
+		} else {
+			endGame();
+		}
+	}
+	
+	private void endGame(){
+		Log.d("Tag", "The game is over because we are out of people to be it");
+		cancelScheduledTasks();
+		adapter.cancelDiscovery();
+
+		GlobalState.myScore = score;
+		releaseService();
+		
+		startActivity(loadScore);
+	}
 
 	private class ChangeItTask extends TimerTask {
 		@Override
 		public void run() {
 			runOnUiThread(new Runnable() {
 				public void run() {
-					//ensureBluetoothDiscoverability();
 					setNextIt();
 					setItLabel();
 					playItAlert();
@@ -440,51 +420,5 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		}
 	}
 
-	private void setNextIt() {
-		index++;
-		if (index < playerList.length) {
-			if (isPlaying(playerList[index])) {
-				ensureBluetoothDiscoverability();
-				it = playerList[index];
-			} else {
-				setNextIt();
-			}
-		} else {
-			cancelScheduledTasks();
-			adapter.cancelDiscovery();
-
-			adapter.setName(adapter.getName() + "__" + score);
-			loadScore.putExtra("FINAL_SCORE", score);
-			
-			GlobalState.myScore = score;
-			releaseService();
-			
-			startActivity(loadScore);
-		}
-
-	}
-
-	private class EndTask extends TimerTask {
-		public void run() {
-			unregisterReceiver(discoverReceiver);
-			cancelScheduledTasks();
-
-			String newName = adapter.getName();
-			for (int i = 0; i < GlobalState.itOrder.length; i++) {
-				if (GlobalState.scoreMap.get(GlobalState.itOrder[i]) == null) {
-					newName += "_0";
-				} else {
-					newName += "_"
-							+ GlobalState.scoreMap.get(GlobalState.itOrder[i]);
-					Log.d("SCORE VAL", GlobalState.itOrder[i] + ": "
-							+ GlobalState.scoreMap.get(GlobalState.itOrder[i]));
-				}
-			}
-			adapter.setName(newName);
-			GlobalState.myScore = score;
-			releaseService();
-
-			startActivity(loadScore);
-		}
-	}
+	
 }

@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import com.fitnessapps.spacerayders.R;
 
 public class BluetoothActivity extends Activity {
 
@@ -33,7 +34,6 @@ public class BluetoothActivity extends Activity {
 
 	protected void setupBluetoothDetection() {
 		registerListeners();
-		// adapter.startDiscovery();
 	}
 
 	protected BluetoothDevice getRemoteDevice(Intent intent) {

@@ -11,11 +11,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.data.GlobalState;
+import com.fitnessapps.spacerayders.R;
 
 public class SplashActivity extends BluetoothActivity {
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,13 +25,11 @@ public class SplashActivity extends BluetoothActivity {
 		
 		setAdapter();
 		getRoot();
-
-		initItOrders();
 	}
 
 	public void onStart() {
 		super.onStart();
-		initBluetooth();
+		initItOrders();
 	}
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -53,20 +53,9 @@ public class SplashActivity extends BluetoothActivity {
 			Log.e("ROOT","Getting root priveleges failed for some reason");
 		}
 	}
-	
-	private void initBluetooth(){
-		enableBluetoothAdapter();
-		registerListener(BluetoothAdapter.ACTION_STATE_CHANGED);
-	}
-	
-	private void enableBluetoothAdapter(){
-		if (!adapter.isEnabled())
-			adapter.enable();
-	}
 
 	private void initItOrders() {
 		GlobalState.itLists = new ArrayList<String[]>();
-		GlobalState.currentPlayers = new ArrayList<String>();
 
 		String[] list1 = { "Red", "Blue", "Green", "Pink", "Silver", "Black" };
 		String[] list2 = { "Red", "Green", "Black", "Silver", "Pink", "Blue" };
@@ -102,9 +91,20 @@ public class SplashActivity extends BluetoothActivity {
 		return true;
 	}
 
-	public void gotoSetJoinNameActivity(View view) {
-		Intent loadGame = new Intent(this, DevicesTrackerActivity.class);
-		startActivity(loadGame);
+	public void gotoDevicesTrackerActivity(View view) {
+		if(GlobalState.currentPlayers != null && GlobalState.currentPlayers.size() > 0){
+			if(adapter.getName().equals(GlobalState.playerName)){
+				Log.d("Tag", "Playing with: " + GlobalState.currentPlayers.toString());
+				Intent loadGame = new Intent(this, DevicesTrackerActivity.class);
+				startActivity(loadGame);
+			}
+			else{
+				Toast.makeText(this, "You forgot to add yourself as a player.", Toast.LENGTH_LONG);
+			}
+		}
+		else{
+			Toast.makeText(this, "You must select a list of players from Settings first.", Toast.LENGTH_LONG).show();
+		}
 	}
 
 }

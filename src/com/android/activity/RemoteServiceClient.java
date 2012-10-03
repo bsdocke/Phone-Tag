@@ -14,6 +14,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
+import com.fitnessapps.spacerayders.R;
 import fitnessapps.acceltest.activity.IAccelRemoteService;
 
 public abstract class RemoteServiceClient extends BluetoothActivity {

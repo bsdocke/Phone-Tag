@@ -15,32 +15,7 @@
         android:textColor="#FFF"
         android:textSize="@dimen/inputLabelSize" />
 
-    <!--
-         <Button
-        android:id="@+id/startGameBttn"
-        android:layout_width="@dimen/optionButtonWidth"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/joinStartLabel"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/custom_option_button"
-        android:onClick="gotoTeamSetupActivity"
-        android:text="@string/startGameBttnText"
-        android:textColor="@color/customButtonTextColor"
-        android:textSize="@dimen/optionButtonTextSize" />-->
-
-   <!--  <Button
-        android:id="@+id/howToBttn"
-        android:layout_width="@dimen/optionButtonWidth"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/joinGameBttn"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/custom_option_button"
-        android:onClick="gotoHowToPlayActivity"
-        android:text="@string/howToPlayTitleText"
-        android:textColor="@color/customButtonTextColor"
-        android:textSize="@dimen/optionButtonTextSize" /> -->
-
+    
     <Button
         android:id="@+id/joinGameBttn"
         android:layout_width="@dimen/optionButtonWidth"
@@ -49,7 +24,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:background="@drawable/custom_option_button"
-        android:onClick="gotoSetJoinNameActivity"
+        android:onClick="gotoDevicesTrackerActivity"
         android:text="@string/joinGameBttnText"
        
         android:textColor="@color/customButtonTextColor"

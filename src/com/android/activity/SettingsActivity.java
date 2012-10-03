@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.data.GlobalState;
+import com.fitnessapps.spacerayders.R;
 
 public class SettingsActivity extends Activity {
 
@@ -21,34 +22,6 @@ public class SettingsActivity extends Activity {
 	
 	public void onStart(){
 		super.onStart();
-		
-		CheckBox silver = (CheckBox)findViewById(R.id.checkSilver);
-		CheckBox blue = (CheckBox)findViewById(R.id.checkBlue);
-		CheckBox red = (CheckBox)findViewById(R.id.checkRed);
-		CheckBox black = (CheckBox)findViewById(R.id.checkBlack);
-		CheckBox pink = (CheckBox)findViewById(R.id.checkPink);
-		CheckBox green = (CheckBox)findViewById(R.id.checkGreen);
-		
-		for(String name: GlobalState.currentPlayers){
-			if(name.equals("Silver")){
-				silver.setChecked(true);
-			}
-			else if(name.equals("Blue")){
-				blue.setChecked(true);
-			}
-			else if(name.equals("Red")){
-				red.setChecked(true);
-			}
-			else if(name.equals("Black")){
-				black.setChecked(true);
-			}
-			else if(name.equals("Pink")){
-				pink.setChecked(true);
-			}
-			else if(name.equals("Green")){
-				green.setChecked(true);
-			}
-		}
 	}
 	
 	public void onSaveClick(View view){
@@ -62,6 +35,7 @@ public class SettingsActivity extends Activity {
 		GlobalState.currentPlayers = new ArrayList<String>();
 		Spinner adaptName = (Spinner) findViewById(R.id.spinner1);
 		String name = (String)adaptName.getSelectedItem();
+		GlobalState.playerName = name;
 		BluetoothAdapter.getDefaultAdapter().setName(name);
 		
 		if(silver.isChecked()){
@@ -83,6 +57,6 @@ public class SettingsActivity extends Activity {
 			GlobalState.currentPlayers.add(green.getText().toString());
 		}
 		
-		Toast.makeText(this, BluetoothAdapter.getDefaultAdapter().getName() + "is you", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, BluetoothAdapter.getDefaultAdapter().getName() + " is you", Toast.LENGTH_LONG).show();
 	}
 }
