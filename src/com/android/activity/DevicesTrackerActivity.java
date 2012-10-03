@@ -402,7 +402,7 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 		GlobalState.myScore = score;
 		releaseService();
-		
+		it = "nobody";
 		startActivity(loadScore);
 	}
 

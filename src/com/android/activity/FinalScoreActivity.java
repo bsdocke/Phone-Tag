@@ -1,6 +1,7 @@
 package com.android.activity;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ public class FinalScoreActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 		init();
+		BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
 	}
 
 	private void init() {
