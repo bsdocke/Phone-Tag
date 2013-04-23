@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.fitnessapps.spacerayders"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="fitnessapps.spacerayders.activity"
+    android:versionCode="2"
+    android:versionName="1.1" >
 
     <uses-sdk android:minSdkVersion="6" />
 
@@ -12,15 +12,13 @@
     </uses-permission>
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:icon="@drawable/run_tag"
         android:label="@string/app_name" >
         <activity
-            android:name="com.android.activity.SplashActivity"
+            android:name="fitnessapps.spacerayders.activity.SplashActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
             android:screenOrientation="nosensor" >
@@ -31,63 +29,67 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.activity.SetJoinNameActivity"
+            android:name="fitnessapps.spacerayders.activity.SetJoinNameActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.DirectionsScreenActivity"
+            android:name="fitnessapps.spacerayders.activity.DirectionsScreenActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.DevicesTrackerActivity"
+            android:name="fitnessapps.spacerayders.activity.DevicesTrackerActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.CreateChoosePlayerNameActivity"
+            android:name="fitnessapps.spacerayders.activity.CreateChoosePlayerNameActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.GameNameSetupActivity"
+            android:name="fitnessapps.spacerayders.GameNameSetupActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.GameActivity"
+            android:name="fitnessapps.spacerayders.GameActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.StartGameDirectionsActivity"
+            android:name="fitnessapps.spacerayders.activity.StartGameDirectionsActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.LobbyServerActivity"
+            android:name="fitnessapps.spacerayders.activity.LobbyServerActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.UserGameSelectActivity"
+            android:name="fitnessapps.spacerayders.activity.UserGameSelectActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.FinalScoreActivity"
+            android:name="fitnessapps.spacerayders.activity.FinalScoreActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.HowToPlayActivity"
+            android:name="fitnessapps.spacerayders.activity.HowToPlayActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.HowToSetUpActivity"
+            android:name="fitnessapps.spacerayders.activity.HowToSetUpActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.HowToGameActivity"
+            android:name="fitnessapps.spacerayders.activity.HowToGameActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.HowToGainPointsActivity"
+            android:name="fitnessapps.spacerayders.activity.HowToGainPointsActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="com.android.activity.SettingsActivity"
+            android:name="fitnessapps.spacerayders.activity.SettingsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name="fitnessapps.spacerayders.activity.DirectionsActivity"
             android:configChanges="orientation"
             android:screenOrientation="nosensor" />
     </application>

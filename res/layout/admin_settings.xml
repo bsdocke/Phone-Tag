@@ -30,19 +30,11 @@
         android:text="@string/chk_blk" />
 
     <CheckBox
-        android:id="@+id/checkPink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/checkBlack"
-        android:layout_marginTop="10dp"
-        android:text="@string/chk_pnk" />
-
-    <CheckBox
         android:id="@+id/checkRed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/checkPink"
+        android:layout_below="@+id/checkBlack"
         android:layout_marginTop="10dp"
         android:text="@string/chk_red" />
 

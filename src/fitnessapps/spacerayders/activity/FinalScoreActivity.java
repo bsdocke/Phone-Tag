@@ -1,4 +1,4 @@
-package com.android.activity;
+package fitnessapps.spacerayders.activity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -8,17 +8,18 @@ import android.os.Bundle;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.data.GlobalState;
-import com.fitnessapps.spacerayders.R;
+import fitnessapps.spacerayders.data.GlobalState;
 
 public class FinalScoreActivity extends Activity {
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.final_score);
 		setBackground();
 	}
 
+	@Override
 	public void onStart() {
 		super.onStart();
 		init();
@@ -36,6 +37,7 @@ public class FinalScoreActivity extends Activity {
 		bg.setAlpha(100);
 	}
 
+	@Override
 	public void onBackPressed() {
 		gotoSplashActivity();
 	}

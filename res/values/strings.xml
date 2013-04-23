@@ -11,7 +11,11 @@
     <string name="playerNameInputText">Enter a Player Name:</string>
     <string name="gameNameInputText">Enter a name for this game:</string>
     <string name="directionTitleText">Directions</string>
-    <string name="directionBodyText">You will need to find a game of tag near you. Press OK to search for a game. Hit "Yes" on all windows to continue. Select a game by clicking its name.</string>
+    <string name="directionBodyText">
+        The Game: Each player earns points during the time they are IT. Your job is to stay away from the person that is IT and try to be as close to everyone else when you are IT. \n 
+        Step 1: Click your context menu and select the color you want to be in the top drop down menu. Each person playing should have their own color.
+        Then check the boxes of the colors playing with you, including your own color. Click "Save." \n 
+        Step 2: Press back and then once everyone is ready to start press "Play Game" at the same time. </string>
     <string name="creationDirectionBodyText">You will now need to wait for players to join. The game will begin at the time on the next screen. Press OK to begin waiting for players.</string>
     <string name="devicesListTitleText">Get Moving!</string>
     <string name="joinStartLabelText">Tele-Tag</string>
@@ -31,8 +35,6 @@
     <string name="howToSetUpTitleText">Set Up</string>
     <string name="howToPlayGameTitleText">The Game</string>
     <string name="howToGainPointsTitleText">Points</string>
-    <string name="howToSetUpBodyText">Only one player from your group should start a game by pressing the \"Start Game\" button, 
-	    the other players should select \"Join Game\". \n</string>
     <string name="howToGameBodyText">Each game will last 2 minutes long. Once the game begins it will display the
            name of whoever is \"IT\" and your current score. Your goal is to try to stay away from the person who is \"IT\". If you are \"IT\" your goal
            is to try and stay as close to as many other players as possible. Everyone will have their turn to be \"IT\" so be ready to run. The phone
@@ -54,7 +56,6 @@
         <item>Black</item>
         <item>Blue</item>
         <item>Green</item>
-        <item>Pink</item>
         <item>Red</item>
         <item>Silver</item>
     </string-array>

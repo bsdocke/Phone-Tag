@@ -1,4 +1,4 @@
-package com.android.activity;
+package fitnessapps.spacerayders.activity;
 
 import java.util.ArrayList;
 
@@ -10,16 +10,17 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.data.GlobalState;
-import com.fitnessapps.spacerayders.R;
+import fitnessapps.spacerayders.data.GlobalState;
 
 public class SettingsActivity extends Activity {
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.admin_settings);
 	}
 	
+	@Override
 	public void onStart(){
 		super.onStart();
 	}
@@ -29,7 +30,6 @@ public class SettingsActivity extends Activity {
 		CheckBox blue = (CheckBox)findViewById(R.id.checkBlue);
 		CheckBox red = (CheckBox)findViewById(R.id.checkRed);
 		CheckBox black = (CheckBox)findViewById(R.id.checkBlack);
-		CheckBox pink = (CheckBox)findViewById(R.id.checkPink);
 		CheckBox green = (CheckBox)findViewById(R.id.checkGreen);
 		
 		GlobalState.currentPlayers = new ArrayList<String>();
@@ -50,13 +50,10 @@ public class SettingsActivity extends Activity {
 		if(black.isChecked()){
 			GlobalState.currentPlayers.add(black.getText().toString());
 		}
-		if(pink.isChecked()){
-			GlobalState.currentPlayers.add(pink.getText().toString());
-		}
 		if(green.isChecked()){
 			GlobalState.currentPlayers.add(green.getText().toString());
 		}
 		
-		Toast.makeText(this, BluetoothAdapter.getDefaultAdapter().getName() + " is you", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "You are " + name, Toast.LENGTH_LONG).show();
 	}
 }

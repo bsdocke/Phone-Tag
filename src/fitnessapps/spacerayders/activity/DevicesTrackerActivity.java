@@ -1,13 +1,15 @@
-package com.android.activity;
+package fitnessapps.spacerayders.activity;
 
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -17,19 +19,20 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.data.GlobalState;
-import com.fitnessapps.spacerayders.R;
+import fitnessapps.spacerayders.data.GlobalState;
 
 public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	private Intent loadScore;
+	private Intent startIntent;
 
 	private Timer cancelScheduler;
 	private Timer startScheduler;
 	private Timer itScheduler;
 
-	private StartDiscoveryTask startTask;
+	private CancelDiscoveryTask cancelTask;
 	private ChangeItTask itTask;
 
 	private TextView scoreBoard;
@@ -44,6 +47,7 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	private static final int START_SCORE = 0;
 	private static final int SCORE_OFFSET = 100;
+	private static final int GAME_DURATION = 300;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,7 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		getWindow().addFlags(LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
+	@Override
 	public void onStart() {
 		super.onStart();
 
@@ -64,16 +69,37 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		initSound();
 		resetScore();
 		setPlayerList();
-		setFinalScoreIntent();
+		setIntents();
 
-		gameStart();
-
-		setAdapter();
+		gameStart(); // binds to accelerometer service if it exists
+		
 		initTimerItems();
 		initScoreItems(START_SCORE);
-
-		discoverableAccepted();
+		
+		setAdapter(); // must be called before discovarableAccepeted();
+		setUpBluetooth();
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    // Check which request we're responding to
+	    if (requestCode == BluetoothActivity.REQUEST_ENABLE_BT) {
+	        if (resultCode == RESULT_CANCELED) {
+	        	Toast.makeText(this, "You must enable Bluetooth to play this game", Toast.LENGTH_LONG).show();
+	        	startActivity(startIntent);
+	        } 
+	    }
+	    if (requestCode == BluetoothActivity.REQUEST_DISCOV_BT) {
+	    	if (resultCode == GAME_DURATION) {
+	    		setItOrder();
+	    	}
+	    	if (resultCode == RESULT_CANCELED) {
+	    		Toast.makeText(this, "You must be discoverable to play this game", Toast.LENGTH_LONG).show();
+	    		startActivity(startIntent);
+	    	}
+	    }
+	}
+	
 	
 	private void resetScore(){
 		GlobalState.myScore = START_SCORE;
@@ -86,13 +112,14 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		GlobalState.itOrder = playerList;
 	}
 
-	private void setFinalScoreIntent() {
+	private void setIntents() {
 		loadScore = new Intent(this, FinalScoreActivity.class);
+		startIntent = new Intent(this, SplashActivity.class);
 	}
 
 	private void setItOrder() {
 		//int length = playerList.length;
-		int interval = 62000;// (GAME_DURATION / length) * 1000;
+		int interval = 62000; //(GAME_DURATION / length) * 1000;
 
 		updateIt();
 		setItLabel();
@@ -120,11 +147,6 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		itScheduler.schedule(itTask, interval, interval);
 	}
 
-	private void discoverableAccepted() {
-		setItOrder();
-		setUpBluetoothDetection();
-	}
-
 	private void setItLabel() {
 		TextView itLabel = (TextView) findViewById(R.id.itLabel);
 		itLabel.setText(it + " is IT");
@@ -132,7 +154,7 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	private void initTimerItems() {
 		startScheduler = new Timer();
-		startTask = new StartDiscoveryTask();
+		cancelTask = new CancelDiscoveryTask();
 	}
 
 	private void initScoreItems(int startScore) {
@@ -158,12 +180,15 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		scoreBoard.setText(newScore);
 	}
 
-	protected void setUpBluetoothDetection() {
+	protected void setUpBluetooth() {
 		super.setupBluetoothDetection();
-		Log.e("TIME EXTENDED", "1 minute");
-		ensureBluetoothDiscoverability();
+		super.enableBluetooth();
+		super.makeDiscoverable(GAME_DURATION);
+		//Log.e("TIME EXTENDED", "1 minute");
+		//ensureBluetoothDiscoverability();
 	}
 
+	@Override
 	protected void registerListeners() {
 		super.registerListeners();
 		registerListener(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
@@ -179,13 +204,35 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 
 	@Override
 	public void onBackPressed() {
-		// This is meant to make the Back button inactive for this screen
+		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int which) {
+		        switch (which){
+		        case DialogInterface.BUTTON_POSITIVE:
+		        	onStop();
+
+		    		releaseService();
+		    		it = "nobody";
+		    		startActivity(startIntent);
+		            break;
+
+		        case DialogInterface.BUTTON_NEGATIVE:
+		            dialog.cancel();
+		            break;
+		        }
+		    }
+		};
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Are you sure you want to quit?").setPositiveButton("Yes", dialogClickListener)
+		    .setNegativeButton("No", dialogClickListener).show();
 	}
 
+	/*
+	@Override
 	public void onAttachedToWindow() {
 		this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
 		super.onAttachedToWindow();
-	}
+	} */
 
 	private void stopAdapter() {
 		adapter.cancelDiscovery();
@@ -195,8 +242,10 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		return Integer.toString(value);
 	}
 
+	@Override
 	protected BroadcastReceiver initReceiver() {
 		return new BroadcastReceiver() {
+			@Override
 			public void onReceive(Context context, Intent intent) {
 				String action = intent.getAction();
 				actionHandler(action, intent);
@@ -322,8 +371,8 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 	private void cancelStartTimers() {
 		if (startScheduler != null)
 			startScheduler.cancel();
-		if (startTask != null)
-			startTask.cancel();
+		if (cancelTask != null)
+			cancelTask.cancel();
 	}
 
 	private void initSound() {
@@ -336,11 +385,11 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		try {
 			if (thisPlayerIsIt()) {
 				adapter.startDiscovery();
-				startScheduler.scheduleAtFixedRate(startTask, 4000, 4000);
+				startScheduler.scheduleAtFixedRate(cancelTask, 4000, 4000);
 				pool.play(soundID, 1, 1, 1, 0, 1);
 			} else if (startScheduler != null) {
-				startTask.cancel();
-				startTask = new StartDiscoveryTask();
+				cancelTask.cancel();
+				cancelTask = new CancelDiscoveryTask();
 			}
 		} catch (IllegalStateException e) {
 			//Do nothing, the timer has already been cancelled;
@@ -372,6 +421,7 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 	}
 
 	public class StartDiscoveryTask extends TimerTask {
+		@Override
 		public void run() {
 			adapter.cancelDiscovery();
 		}
@@ -381,13 +431,13 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 		index++;
 		adapter.cancelDiscovery();
 		if (index < playerList.length) {
-			Log.d("Tag", "setNextIt, index is " + index);
+			//Log.d("Tag", "setNextIt, index is " + index);
 			if (isPlaying(playerList[index])) {
-				Log.d("Tag", playerList[index] + "is playing");
-				ensureBluetoothDiscoverability();
+				//Log.d("Tag", playerList[index] + "is playing");
+				//ensureBluetoothDiscoverability();
 				it = playerList[index];
 			} else {
-				Log.d("Tag", "Recursively calling setNextIt");
+				//Log.d("Tag", "Recursively calling setNextIt");
 				setNextIt();
 			}
 		} else {
@@ -396,7 +446,7 @@ public class DevicesTrackerActivity extends RemoteServiceClient {
 	}
 	
 	private void endGame(){
-		Log.d("Tag", "The game is over because we are out of people to be it");
+		//Log.d("Tag", "The game is over because we are out of people to be it");
 		cancelScheduledTasks();
 		adapter.cancelDiscovery();
 

@@ -22,7 +22,6 @@
         android:layout_below="@+id/directionHeader"
         android:layout_marginTop="23dp"
         android:gravity="center_horizontal"
-        android:text="@string/howToSetUpBodyText"
         android:textColor="#FFFFFF"
         android:textSize="@dimen/directionBodySize" />
 

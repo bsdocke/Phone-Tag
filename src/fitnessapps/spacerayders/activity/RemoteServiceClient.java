@@ -1,9 +1,5 @@
-package com.android.activity;
+package fitnessapps.spacerayders.activity;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ComponentName;
@@ -13,8 +9,6 @@ import android.content.ServiceConnection;
 
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
-import com.fitnessapps.spacerayders.R;
 import fitnessapps.acceltest.activity.IAccelRemoteService;
 
 public abstract class RemoteServiceClient extends BluetoothActivity {
@@ -60,20 +54,20 @@ public abstract class RemoteServiceClient extends BluetoothActivity {
   public void onServiceConnected(ComponentName className,
     IBinder boundService) {
    remoteService = IAccelRemoteService.Stub
-     .asInterface((IBinder) boundService);
+     .asInterface(boundService);
    try {
     remoteService.setGameNameFromService("Space Rayders");
    } catch (RemoteException e) {
     // TODO Auto-generated catch block
     e.printStackTrace();
    }
-   Log.d(getClass().getSimpleName(), "onServiceConnected()");
+   //Log.d(getClass().getSimpleName(), "onServiceConnected()");
   }
 
   public void onServiceDisconnected(ComponentName className) {
    
    remoteService = null;
-   Log.d(getClass().getSimpleName(), "onServiceDisconnected");
+   //Log.d(getClass().getSimpleName(), "onServiceDisconnected");
   }
   
   public void serviceAppendEndGame() {
@@ -94,7 +88,8 @@ public abstract class RemoteServiceClient extends BluetoothActivity {
   onStop method in your activity class.
   *
   */
- public void onStop() {
+ @Override
+public void onStop() {
  // unregisterListeners();
   releaseService();
   super.onStop();
